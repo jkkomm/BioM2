@@ -42,7 +42,7 @@ BioMLF requires:
                              <<< Data requirements >>>
 
 -----------------------------------------------------------------------------
-##[Genome-wide DNA methylation data]  (data.frame)
+## [Genome-wide DNA methylation data]  (data.frame)
 # First column name must be 'label', and the rest are the features (e.g., CpGs).
 
 label cg21870274 cg09499020 cg16535257 cg00168193
@@ -54,8 +54,8 @@ label cg21870274 cg09499020 cg16535257 cg00168193
      0    -0.0158     0.0032    -0.0173     0.0133
 
 --------------------------------------------------------------------------------
-##[Feature annotation data]  (data.frame)
-#The data frame must contain the two column names 'ID', 'entrezID' .
+## [Feature annotation data]  (data.frame)
+# The data frame must contain the two column names 'ID' and 'entrezID' .
 
          ID entrezID symbol
  cg00000029     5934   RBL2
@@ -66,13 +66,35 @@ label cg21870274 cg09499020 cg16535257 cg00168193
  cg00000289       87  ACTN1
 
 -----------------------------------------------------------------------------
+## [Pathway annotation data] (list)
+# The name of each subset of the list is the ID of the pathway, and each subset contains a vector of gene entrezIDs.
 
+List of 15719
+ $ GO:0000002: chr [1:31] "142" "291" "1763" "1890" ...
+ $ GO:0000003: chr [1:1513] "2" "18" "49" "51" ...
+ $ GO:0000012: chr [1:12] "142" "1161" "2074" "3981" ...
+ $ GO:0000017: chr [1:2] "6523" "6524"
+ $ GO:0000018: chr [1:131] "60" "86" "142" "604" ...
+ $ GO:0000019: chr [1:7] "2068" "4292" "4361" "7014" ...
+ $ GO:0000022: chr [1:9] "4926" "6795" "9055" "9212" ...
+ $ GO:0000023: chr [1:3] "2548" "2595" "8972"
+
+-----------------------------------------------------------------------------
 
 ```
 
 
 ## Usage
 
+```
+BioMM_v2(TrainData = data,TestData = NULL,  ## If you only have one dataset
+         pathlistDB=pathlistDB,  ## ==>> [Pathway annotation data]
+         FeatureAnno=FeatureAnno, ## ==>> [Feature annotation data]
+         classifier='liblinear',nfolds=5, ## Choose your learner, currently only cross-validation is supported
+         Inner_CV='Yes',inner_folds=10, ## Whether to use nested resampling 
+         cores=5  ## Parallel support
+         )
+```
 
 ## Installation
 
