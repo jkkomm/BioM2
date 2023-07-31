@@ -87,13 +87,40 @@ List of 15719
 ## Usage
 
 ```
-BioMM_v2(TrainData = data,TestData = NULL,  ## If you only have one dataset
-         pathlistDB=pathlistDB,  ## ==>> [Pathway annotation data]
-         FeatureAnno=FeatureAnno, ## ==>> [Feature annotation data]
-         classifier='liblinear',nfolds=5, ## Choose your learner, currently only cross-validation is supported
-         Inner_CV='Yes',inner_folds=10, ## Whether to use nested resampling 
-         cores=5  ## Parallel support
+BioMLF ( TrainData = data , TestData = NULL ,              ## If you only have one dataset
+         pathlistDB = pathlistDB ,                         ## ==>> [Pathway annotation data]
+         FeatureAnno = FeatureAnno ,                       ## ==>> [Feature annotation data]
+         classifier = 'liblinear' , nfolds = 5 ,           ## Choose your learner( use "lrns()" ) , currently only cross-validation is supported
+         Inner_CV = 'Yes' , inner_folds=10 ,               ## Whether to use nested resampling 
+         cores = 5                                         ## Parallel support
          )
+                                                           ...(More Detail)
+
+
+[1] "===================BioMLF=================="
+[1] "<<<<<-----Start-----Resampling(CV,folds=5)-No.1----->>>>>"
+[1] "Step1: ReadData"
+[1] "     |>Total number of pathways==>>3970"
+[1] "Step2: FeartureSelection-features"
+[1] "     |> Total number of selected features==>>38060"
+[1] "Step3: MergeData"
+[1] "     |> Total number of selected pathways==>>3969"
+[1] "     |> Min features number of pathways==>>15.......Max features number of pathways==>>502"
+[1] "Step4: Reconstruction"
+[1] "     <<< Reconstruction Done! >>>     "
+[1] "Step5: FeartureSelection-pathways"
+[1] "     |> Final number of pathways >>>3969......Min correlation of pathways>>>0.256"
+[1] "Step6: Predict and Metric"
+[1] "######Resampling NO.1~~~~liblinear==>AUC:0.296 ACC:0.231 PCCs:-0.535"
+Time difference of 1.552451 mins
+[1] "---------------------####################------------------"
+[1] "<<<<<-----Start-----Resampling(CV,folds=5)-No.2----->>>>>"
+[1] "Step1: ReadData"
+[1] "     |>Total number of pathways==>>3970"
+.....
+.....
+
+
 ```
 
 ## Installation
