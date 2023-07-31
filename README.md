@@ -30,35 +30,51 @@ Shunjie Zhang  ----  (E-mail: 1838076459@qq.com)
 
 # Tutorial
 
-<!-- Add a demo for your project -->
-
-I believe that you should bring value to the reader as soon as possible. You should be able to get the user up and running with your project with minimal friction.
-
-If you have a quickstart guide, this is where it should be.
-
-Alternatively, you can add a demo to show what your project can do.
 
 ## Data requirements
 
+BioMLF requires:
+- Genome-wide DNA methylation data / Bulk RNA-seq data
+- Feature annotation data
+- Pathway annotation data  (Gene ontological and KEGG pathways are used in this tutorial)
+  
+```
+                             <<< Data requirements >>>
+
+-----------------------------------------------------------------------------
+##[Genome-wide DNA methylation data]  (data.frame)
+# First column name must be 'label', and the rest are the features (e.g., CpGs).
+
+label cg21870274 cg09499020 cg16535257 cg00168193
+     0     0.0057     0.0002    -0.0313     0.0002
+     0    -0.0317    -0.0444    -0.0578    -0.0160
+     1    -0.0341    -0.0541    -0.0056    -0.0230
+     1     0.0811    -0.0029     0.0049     0.0274
+     1    -0.0187     0.0475     0.1168     0.0169
+     0    -0.0158     0.0032    -0.0173     0.0133
+
+--------------------------------------------------------------------------------
+##[Feature annotation data]  (data.frame)
+#The data frame must contain the two column names 'ID', 'entrezID' .
+
+         ID entrezID symbol
+ cg00000029     5934   RBL2
+ cg00000109    64778 FNDC3B
+ cg00000155   221927  BRAT1
+ cg00000221   162282 ANKFN1
+ cg00000236     7419  VDAC3
+ cg00000289       87  ACTN1
+
+-----------------------------------------------------------------------------
+
+
+```
 
 
 ## Usage
-[(Back to top)](#table-of-contents)
 
-Next, you have to explain how to use your project. You can create subsections under here to explain more clearly.
 
 ## Installation
-[(Back to top)](#table-of-contents)
-
-> **Note**: For longer README files, I usually add a "Back to top" buttton as shown above. It makes it easy to navigate.
-
-This is where your installation instructions go.
-
-You can add snippets here that your readers can copy-paste with click:
-
-```shell
-gh repo clone navendu-pottekkat/awesome-readme
-```
 
 
 # Contribute
