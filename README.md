@@ -1,5 +1,4 @@
-# BioMLF
-Biologically Interpretable Machine Learning Framework
+# BioMLF: Biologically explainable Machine Learning Framework for phenotype prediction using omics data
 
 <!-- Add buttons here -->
 
@@ -8,56 +7,28 @@ Biologically Interpretable Machine Learning Framework
 
 <!-- Remove this note if you plan to copy this README -->
 
-> **Note**: This was a three-year-old, un-updated repository and didn't necessarily reflect what I think a GitHub README should look like.
->
-> But it still receives a lot of likes and stars, so I thought it was time to update it.
->
-> If you are looking for the old version, you can find it [here](https://github.com/navendu-pottekkat/awesome-readme/tree/a3a427abfdfc8567a3565012bcdf10c3a3f938ca).
->
-> This guide is for small open source projects without dedicated websites to provide extensive documentation and just need a README to help users use the project.
+> **Note**: At present, the level of refinement in the details of this R package is suboptimal. Nonetheless, a series of novel functionalities are slated for inclusion to augment its capabilities.
 
-Here is an [empty template](./README-template.md) you can reuse.
 
-<!-- Describe your project in brief -->
+## Motivation
+Identifying reproducible and interpretable biological patterns from high-dimensional omics data is a critical factor in understanding the risk mechanism of complex disease. As such, explainable machine learning can offer biological insight in addition to personalized risk scoring.
 
-The project title is a level 1 heading (`<h1>Project Title</h1>` or `# Project Title`).
+## Deliverables
+We have implemented a biologically informed multi-stage machine learning framework termed __BioMLF__ specifically for phenotype prediction using omics-scale data based on prior biological information including gene ontological (GO) and/or KEGG pathways.   
 
-If your project has a name, then this is where it would go.
+**Features of BioMLF in a nutshell**:   
 
-If your project does not have a name, you can use this space to explain the project. For example, code repositories of research papers usually have the paper title here.
+1. Applicability for multiple omics data modalities (e.g. methylome, transcriptome). 
+2. Various biological stratification strategies.    
+3. Prioritizing outcome-associated functional patterns.   
+4. Personalized scoring based on biological stratified patterns.   
+5. Possibility for an extension to learning models of interest.   
 
-You can also add your branding in a cover image. It makes the README unique and gets people's attention quickly.
+## :writing_hand: Authors
 
-Wait, I forgot something. You can use this README as a template from [this link](README-template.md).
+Shunjie Zhang  ----  (E-mail: 1838076459@qq.com)
 
-I usually prefer the dimensions 1280×650. It has worked well for me so far. I can also reuse it as my social preview image for the repo.
-
-Below the title, you will see some badges. These can be used to show the status of the project.
-
-The badges used here were generated with [shields.io](https://shields.io/).
-
-You can add a workflow status badge to indicate the status of your workflows in your README. This can used to answer questions like, `is the build working?` or `are the e2e tests passing?`.
-
-The badges used here are explained below:
-
-<!-- Add badges with link to Shields IO -->
-
-![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/navendu-pottekkat/awesome-readme?include_prereleases)
-: Shows the current release version.
-
-![GitHub last commit](https://img.shields.io/github/last-commit/navendu-pottekkat/awesome-readme)
-: Shows the last commit time. Good indication of the project activity.
-
-![GitHub issues](https://img.shields.io/github/issues-raw/navendu-pottekkat/awesome-readme)
-: Dynamic badge that shows the number of open issues in the project.
-
-![GitHub pull requests](https://img.shields.io/github/issues-pr/navendu-pottekkat/awesome-readme)
-: Similar dynamic badge, but for pull requests.
-
-![GitHub](https://img.shields.io/github/license/navendu-pottekkat/awesome-readme)
-: Shows the open source license the project uses.
-
-# Quickstart/Demo
+# Tutorial
 
 <!-- Add a demo for your project -->
 
@@ -67,22 +38,16 @@ If you have a quickstart guide, this is where it should be.
 
 Alternatively, you can add a demo to show what your project can do.
 
-# Table of Contents
+## Data requirements
 
-GitHub has a ToC feature now. It works really well, so this might not be needed. Still, if you want to add a ToC in the README, you can add it here.
 
-I just learned that VS Code automatically updates the ToC if you change any of the headings. Pretty cool!
 
-- [Project Title](#project-title)
-- [Quickstart/Demo](#quickstartdemo)
-- [Table of Contents](#table-of-contents)
-- [Installation](#installation)
-- [Usage](#usage)
-- [Development](#development)
-- [Contribute](#contribute)
-- [License](#license)
+## Usage
+[(Back to top)](#table-of-contents)
 
-# Installation
+Next, you have to explain how to use your project. You can create subsections under here to explain more clearly.
+
+## Installation
 [(Back to top)](#table-of-contents)
 
 > **Note**: For longer README files, I usually add a "Back to top" buttton as shown above. It makes it easy to navigate.
@@ -93,28 +58,6 @@ You can add snippets here that your readers can copy-paste with click:
 
 ```shell
 gh repo clone navendu-pottekkat/awesome-readme
-```
-
-# Usage
-[(Back to top)](#table-of-contents)
-
-Next, you have to explain how to use your project. You can create subsections under here to explain more clearly.
-
-# Development
-[(Back to top)](#table-of-contents)
-
-You have people who want to use your project and then you have people who want contribute to your project.
-
-This is where you provide instructions for the latter.
-
-Add instructions on how to set up a development environment, clone, and build the project.
-
-You can use the code snippets here as well:
-
-```shell
-command to clone your project
-command to build your project
-command to run your project in development mode
 ```
 
 
