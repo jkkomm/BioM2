@@ -91,34 +91,132 @@ BioMLF ( TrainData = data , TestData = NULL ,              ## If you only have o
          pathlistDB = pathlistDB ,                         ## ==>> [Pathway annotation data]
          FeatureAnno = FeatureAnno ,                       ## ==>> [Feature annotation data]
          classifier = 'liblinear' , nfolds = 5 ,           ## Choose your learner( use "lrns()" ) , currently only cross-validation is supported
-         Inner_CV = 'Yes' , inner_folds=10 ,               ## Whether to use nested resampling 
+         Inner_CV = 'None' , inner_folds=10 ,               ## Whether to use nested resampling 
          cores = 5                                         ## Parallel support
          )
                                                            ...(More Detail)
 
 
-[1] "===================BioMLF=================="
+[1] "=================== BioMLF =================="
 [1] "<<<<<-----Start-----Resampling(CV,folds=5)-No.1----->>>>>"
 [1] "Step1: ReadData"
 [1] "     |>Total number of pathways==>>3970"
 [1] "Step2: FeartureSelection-features"
-[1] "     |> Total number of selected features==>>38060"
+[1] "     |> Total number of selected features==>>13452"
 [1] "Step3: MergeData"
-[1] "     |> Total number of selected pathways==>>3969"
-[1] "     |> Min features number of pathways==>>15.......Max features number of pathways==>>502"
+[1] "     |> Total number of selected pathways==>>3819"
+[1] "     |> Min features number of pathways==>>11.......Max features number of pathways==>>270"
 [1] "Step4: Reconstruction"
 [1] "     <<< Reconstruction Done! >>>     "
 [1] "Step5: FeartureSelection-pathways"
-[1] "     |> Final number of pathways >>>3969......Min correlation of pathways>>>0.256"
+[1] "     |> Final number of pathways >>>3819......Min correlation of pathways>>>0.33"
 [1] "Step6: Predict and Metric"
-[1] "######Resampling NO.1~~~~liblinear==>AUC:0.296 ACC:0.231 PCCs:-0.535"
-Time difference of 1.552451 mins
+[1] "######Resampling NO.1~~~~liblinear==>AUC:0.964 ACC:0.929 PCCs:0.831"
+Time difference of 1.969118 mins
 [1] "---------------------####################------------------"
 [1] "<<<<<-----Start-----Resampling(CV,folds=5)-No.2----->>>>>"
 [1] "Step1: ReadData"
 [1] "     |>Total number of pathways==>>3970"
-.....
-.....
+[1] "Step2: FeartureSelection-features"
+...........
+...........
+[1] "---------------------####################------------------"
+[1] "<<<<<-----Start-----Resampling(CV,folds=5)-No.5----->>>>>"
+[1] "Step1: ReadData"
+[1] "     |>Total number of pathways==>>3970"
+[1] "Step2: FeartureSelection-features"
+[1] "     |> Total number of selected features==>>13473"
+[1] "Step3: MergeData"
+[1] "     |> Total number of selected pathways==>>3825"
+[1] "     |> Min features number of pathways==>>11.......Max features number of pathways==>>237"
+[1] "Step4: Reconstruction"
+[1] "     <<< Reconstruction Done! >>>     "
+[1] "Step5: FeartureSelection-pathways"
+[1] "     |> Final number of pathways >>>3825......Min correlation of pathways>>>0.312"
+[1] "Step6: Predict and Metric"
+[1] "######Resampling NO.5~~~~liblinear==>AUC:0.953 ACC:0.885 PCCs:0.742"
+Time difference of 2.050513 mins
+[1] "---------------------####################------------------"
+[1] "-----------------------------------------------------------"
+[1] "------------========<<<<  Completed!  >>>>======-----------"
+[1] "-----------------------------------------------------------"
+[1] "{|>>>=====Learner: liblinear---Performance Metric---==>> AUC:0.953 ACC:0.876 PCCs:0.785 ======<<<|}"
+  resampling_id learner_name       AUC       ACC      PCCs
+1             1    liblinear 0.9642857 0.9285714 0.8309358
+2             2    liblinear 0.9387755 0.7857143 0.7114370
+3             3    liblinear 0.9132653 0.8214286 0.7304734
+4             4    liblinear 0.9940828 0.9615385 0.9101721
+5             5    liblinear 0.9526627 0.8846154 0.7415218
+Time difference of 10.99379 mins
+[1] "######——————  Well Done！！！——————######"
+
+
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+##If you want to explore which biological pathways have a potential impact on the disease,
+  please set the parameter ( target = 'pathways')
+
+BioMLF ( TrainData = data , TestData = NULL ,              
+         pathlistDB = pathlistDB ,                         
+         FeatureAnno = FeatureAnno ,                       
+         classifier = 'liblinear' , nfolds = 5 ,          
+         target='pathways',                           ##==>>  [ target = 'pathways']
+         cores = 5                                        
+         )
+
+[1] "===================BioMM=================="
+[1] "<<<<<-----Start-----Resampling(CV,folds=5)-No.1----->>>>>"
+[1] "Step1: ReadData"
+[1] "     |>Total number of pathways==>>3970"
+[1] "Step2: FeartureSelection-features"
+[1] "     |> Total number of selected features==>>13452"
+[1] "Step3: MergeData"
+[1] "     |> Total number of selected pathways==>>3819"
+[1] "     |> Min features number of pathways==>>11.......Max features number of pathways==>>270"
+[1] "Step4: PredictPathways"
+[1] "     |>min correlation of pathways=====>>>-0.407......max correlation of pathways===>>>0.75"
+[1] "     <<< PredictPathways Done! >>>     "
+Time difference of 1.667802 mins
+[1] "---------------------####################------------------"
+[1] "<<<<<-----Start-----Resampling(CV,folds=5)-No.2----->>>>>"
+[1] "Step1: ReadData"
+[1] "     |>Total number of pathways==>>3970"
+[1] "Step2: FeartureSelection-features"
+...........
+...........
+1] "---------------------####################------------------"
+[1] "<<<<<-----Start-----Resampling(CV,folds=5)-No.5----->>>>>"
+[1] "Step1: ReadData"
+[1] "     |>Total number of pathways==>>3970"
+[1] "Step2: FeartureSelection-features"
+[1] "     |> Total number of selected features==>>13473"
+[1] "Step3: MergeData"
+[1] "     |> Total number of selected pathways==>>3825"
+[1] "     |> Min features number of pathways==>>11.......Max features number of pathways==>>237"
+[1] "Step4: PredictPathways"
+[1] "     |>min correlation of pathways=====>>>-0.403......max correlation of pathways===>>>0.822"
+[1] "     <<< PredictPathways Done! >>>     "
+Time difference of 1.729354 mins
+[1] "---------------------####################------------------"
+[1] "-----------------------------------------------------------"
+[1] "------------========<<<<  Completed!  >>>>======-----------"
+[1] "-----------------------------------------------------------"
+             id       cor      p.value adjust_p.value
+254    hsa05226 0.6821436 6.059108e-20   2.200668e-16
+165    hsa04814 0.6819709 6.242139e-20   2.267145e-16
+1141 GO:0015698 0.6633595 1.374259e-18   4.991309e-15
+692  GO:0006821 0.6517819 8.435684e-18   3.063840e-14
+557  GO:0003341 0.6499000 1.124604e-17   4.084562e-14
+                                      term
+254  Gastric cancer - Homo sapiens (human)
+165  Motor proteins - Homo sapiens (human)
+1141             inorganic anion transport
+692                     chloride transport
+557                        cilium movement
+Time difference of 8.649476 mins
+[1] "######——————  Well Done！！！——————######"
+
 
 
 ```
