@@ -147,6 +147,25 @@ Time difference of 8.649476 mins
 
 ```
 
+## Pathways Module
+
+A pathway matrix can be obtained by using BioMLF(, target = 'pathways'). The WGCNA-based method aggregates pathways with similar expression patterns into a module, and uses biological semantic information to assist in screening modules with high biological interpretability, and compares these biological pathway modules association with phenotype.
+
+### FindPara_Module（）：Using Biological Semantic Information to Assist in Selecting Optimal Parameters
+```
+result=BioMLF ( TrainData = data , TestData = NULL ,              
+         pathlistDB = pathlistDB ,                         
+         FeatureAnno = FeatureAnno ,                       
+         classifier = 'liblinear' , nfolds = 5 ,          
+         target='pathways',                           ##==>>  [ target = 'pathways']
+         cores = 5                                        
+         )
+result$
+Para=FindPara_Module(pathways_matrix=,control_label=0,minModuleSize = c(10,20),mergeCutHeight=c(0.2,0.25))
+
+```
+
+
 ## Installation
 
 
