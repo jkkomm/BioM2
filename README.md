@@ -84,10 +84,10 @@ List of 15719
 ```
 
 
-## Usage
-
+## Prediction
+if you want to predict the phenotype.
 ```
-result=BioMLF ( TrainData = data , TestData = NULL ,              ## If you only have one dataset
+result=BioMLF ( TrainData = data , TestData = NULL ,       ## If you only have one dataset
          pathlistDB = pathlistDB ,                         ## ==>> [Pathway annotation data]
          FeatureAnno = FeatureAnno ,                       ## ==>> [Feature annotation data]
          classifier = 'liblinear' , nfolds = 5 ,           ## Choose your learner( use "lrns()" ) , currently only cross-validation is supported
@@ -113,8 +113,8 @@ Time difference of 10.99379 mins
 
 ```
 ##  Biological interpretability
-If you want to explore which biological pathways have a potential impact on the disease,
-  please set the parameter ( target = 'pathways') .Show the association between each Biological pathway used for prediction and the phenotype.
+If you want to explore which biological pathways have a potential impact on the disease/phenotype,
+  please set the parameter ( target = 'pathways') .Show the association between each biological pathway used for prediction and the phenotype.
   
 ```
 result=BioMLF ( TrainData = data , TestData = NULL ,              
