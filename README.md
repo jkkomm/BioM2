@@ -87,7 +87,7 @@ List of 15719
 ## Usage
 
 ```
-BioMLF ( TrainData = data , TestData = NULL ,              ## If you only have one dataset
+result=BioMLF ( TrainData = data , TestData = NULL ,              ## If you only have one dataset
          pathlistDB = pathlistDB ,                         ## ==>> [Pathway annotation data]
          FeatureAnno = FeatureAnno ,                       ## ==>> [Feature annotation data]
          classifier = 'liblinear' , nfolds = 5 ,           ## Choose your learner( use "lrns()" ) , currently only cross-validation is supported
@@ -96,47 +96,6 @@ BioMLF ( TrainData = data , TestData = NULL ,              ## If you only have o
          )
                                                            ...(More Detail)
 
-
-[1] "=================== BioMLF =================="
-[1] "<<<<<-----Start-----Resampling(CV,folds=5)-No.1----->>>>>"
-[1] "Step1: ReadData"
-[1] "     |>Total number of pathways==>>3970"
-[1] "Step2: FeartureSelection-features"
-[1] "     |> Total number of selected features==>>13452"
-[1] "Step3: MergeData"
-[1] "     |> Total number of selected pathways==>>3819"
-[1] "     |> Min features number of pathways==>>11.......Max features number of pathways==>>270"
-[1] "Step4: Reconstruction"
-[1] "     <<< Reconstruction Done! >>>     "
-[1] "Step5: FeartureSelection-pathways"
-[1] "     |> Final number of pathways >>>3819......Min correlation of pathways>>>0.33"
-[1] "Step6: Predict and Metric"
-[1] "######Resampling NO.1~~~~liblinear==>AUC:0.964 ACC:0.929 PCCs:0.831"
-Time difference of 1.969118 mins
-[1] "---------------------####################------------------"
-[1] "<<<<<-----Start-----Resampling(CV,folds=5)-No.2----->>>>>"
-[1] "Step1: ReadData"
-[1] "     |>Total number of pathways==>>3970"
-[1] "Step2: FeartureSelection-features"
-...........
-...........
-[1] "---------------------####################------------------"
-[1] "<<<<<-----Start-----Resampling(CV,folds=5)-No.5----->>>>>"
-[1] "Step1: ReadData"
-[1] "     |>Total number of pathways==>>3970"
-[1] "Step2: FeartureSelection-features"
-[1] "     |> Total number of selected features==>>13473"
-[1] "Step3: MergeData"
-[1] "     |> Total number of selected pathways==>>3825"
-[1] "     |> Min features number of pathways==>>11.......Max features number of pathways==>>237"
-[1] "Step4: Reconstruction"
-[1] "     <<< Reconstruction Done! >>>     "
-[1] "Step5: FeartureSelection-pathways"
-[1] "     |> Final number of pathways >>>3825......Min correlation of pathways>>>0.312"
-[1] "Step6: Predict and Metric"
-[1] "######Resampling NO.5~~~~liblinear==>AUC:0.953 ACC:0.885 PCCs:0.742"
-Time difference of 2.050513 mins
-[1] "---------------------####################------------------"
 [1] "-----------------------------------------------------------"
 [1] "------------========<<<<  Completed!  >>>>======-----------"
 [1] "-----------------------------------------------------------"
@@ -150,14 +109,15 @@ Time difference of 2.050513 mins
 Time difference of 10.99379 mins
 [1] "######——————  Well Done！！！——————######"
 
+> str(result)
 
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-
-##If you want to explore which biological pathways have a potential impact on the disease,
-  please set the parameter ( target = 'pathways')
-
-BioMLF ( TrainData = data , TestData = NULL ,              
+```
+##  Biological interpretability
+If you want to explore which biological pathways have a potential impact on the disease,
+  please set the parameter ( target = 'pathways') .Show the association between each Biological pathway used for prediction and the phenotype.
+  
+```
+result=BioMLF ( TrainData = data , TestData = NULL ,              
          pathlistDB = pathlistDB ,                         
          FeatureAnno = FeatureAnno ,                       
          classifier = 'liblinear' , nfolds = 5 ,          
@@ -165,40 +125,6 @@ BioMLF ( TrainData = data , TestData = NULL ,
          cores = 5                                        
          )
 
-[1] "===================BioMM=================="
-[1] "<<<<<-----Start-----Resampling(CV,folds=5)-No.1----->>>>>"
-[1] "Step1: ReadData"
-[1] "     |>Total number of pathways==>>3970"
-[1] "Step2: FeartureSelection-features"
-[1] "     |> Total number of selected features==>>13452"
-[1] "Step3: MergeData"
-[1] "     |> Total number of selected pathways==>>3819"
-[1] "     |> Min features number of pathways==>>11.......Max features number of pathways==>>270"
-[1] "Step4: PredictPathways"
-[1] "     |>min correlation of pathways=====>>>-0.407......max correlation of pathways===>>>0.75"
-[1] "     <<< PredictPathways Done! >>>     "
-Time difference of 1.667802 mins
-[1] "---------------------####################------------------"
-[1] "<<<<<-----Start-----Resampling(CV,folds=5)-No.2----->>>>>"
-[1] "Step1: ReadData"
-[1] "     |>Total number of pathways==>>3970"
-[1] "Step2: FeartureSelection-features"
-...........
-...........
-1] "---------------------####################------------------"
-[1] "<<<<<-----Start-----Resampling(CV,folds=5)-No.5----->>>>>"
-[1] "Step1: ReadData"
-[1] "     |>Total number of pathways==>>3970"
-[1] "Step2: FeartureSelection-features"
-[1] "     |> Total number of selected features==>>13473"
-[1] "Step3: MergeData"
-[1] "     |> Total number of selected pathways==>>3825"
-[1] "     |> Min features number of pathways==>>11.......Max features number of pathways==>>237"
-[1] "Step4: PredictPathways"
-[1] "     |>min correlation of pathways=====>>>-0.403......max correlation of pathways===>>>0.822"
-[1] "     <<< PredictPathways Done! >>>     "
-Time difference of 1.729354 mins
-[1] "---------------------####################------------------"
 [1] "-----------------------------------------------------------"
 [1] "------------========<<<<  Completed!  >>>>======-----------"
 [1] "-----------------------------------------------------------"
@@ -217,7 +143,7 @@ Time difference of 1.729354 mins
 Time difference of 8.649476 mins
 [1] "######——————  Well Done！！！——————######"
 
-
+> str(result)
 
 ```
 
