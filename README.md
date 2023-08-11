@@ -268,18 +268,39 @@ $ ME25:'data.frame':	16 obs. of  4 variables:
 
 ```
 ## Visualization
+VisMulti() can visualize the results with FindParaModule(), PathwaysModule(), ShowModule(),etc.
 
-FindParaModule()
+### VisMulti ( , FindParaModule_obj )
 ```
-```
+Para=FindParaModule(pathways_matrix = Matrix, minModuleSize = c(10,15,20,25), mergeCutHeight=c(0.1,0.15,0.2,0.25,0.3,0.35,0.4))
 
-PathwaysModule()
-```
-```
+VisMulti(FindParaModule_obj=Para)
 
-ShowModule()
 ```
+![minModuleSize](https://github.com/jkkomm/img/blob/main/Find1.png)
+![mergeCutHeight](https://github.com/jkkomm/img/blob/main/Find2.png)
+
+
+### VisMulti ( , PathwaysModule_obj )
 ```
+Modules=PathwaysModule(pathways_matrix = Matrix , control_label = 0, minModuleSize = 10, mergeCutHeight = 0.4, cutoff = 70)
+
+VisMulti(PathwaysModule_obj=Modules)
+```
+![DE_PathwaysModule](https://github.com/jkkomm/img/blob/main/PM1.png)
+
+### VisMulti ( , ShowModule_obj ) 
+```
+Modules=PathwaysModule(pathways_matrix = Matrix , control_label = 0, minModuleSize = 10, mergeCutHeight = 0.4, cutoff = 70)
+
+ModulesInner = ShowModule(Modules,c(25,27,34))
+
+VisMulti(,ShowModule_obj=ModulesInner)
+
+```
+![SM25](https://github.com/jkkomm/img/blob/main/SM25.png)
+![SM34](https://github.com/jkkomm/img/blob/main/SM34.png)
+![SM37](https://github.com/jkkomm/img/blob/main/SM37.png)
 
 ## Installation
 
