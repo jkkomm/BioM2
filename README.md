@@ -267,6 +267,19 @@ $ ME25:'data.frame':	16 obs. of  4 variables:
   ..$ AncestorGO: chr [1:8] "GO:0006928" "GO:0006928" "GO:0006928" "GO:0006928" ...
 
 ```
+## Visualization
+
+FindParaModule()
+```
+```
+
+PathwaysModule()
+```
+```
+
+ShowModule()
+```
+```
 
 ## Installation
 
