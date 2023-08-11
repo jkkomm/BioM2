@@ -198,7 +198,7 @@ result=BioMLF ( TrainData = data , TestData = NULL ,
 
 Matrix=result$PathwaysMatrix
 
-Para=FindPara_Module(pathways_matrix=Matrix,minModuleSize = c(10,15,20,25),mergeCutHeight=c(0.1,0.15,0.2,0.25,0.3,0.35,0.4))
+Para=FindPara_Module(pathways_matrix = Matrix, minModuleSize = c(10,15,20,25), mergeCutHeight=c(0.1,0.15,0.2,0.25,0.3,0.35,0.4))
 
 > str(Para)
 List of 2
@@ -213,13 +213,13 @@ List of 2
   ..- attr(*, "names")= chr [1:3] "power" "ModuleSize" "mergeCutHeight"
 
 ```
-### PathwaysModule（）: Identifying differential modules with high biological interpretability
-We can use the optimal parameters provided by FindPara_Module() ==>> [Para$BestParameter] , or provide them yourself. 
+### PathwaysModule（）: Identifying Differential Modules with High Biological Interpretability
+We can use the optimal parameters provided by FindPara_Module ( ), or provide them yourself. 
 Then we can get the differential modules with high biological interpretability.
 ```
-DE_Module=PathwaysModule(pathways_matrix=Matrix,control_label=0,minModuleSize=10,mergeCutHeight=0.4,cutoff=70)
+Modules=PathwaysModule(pathways_matrix = Matrix , control_label = 0, minModuleSize = 10, mergeCutHeight = 0.4, cutoff = 70)
 
-> str(DE_Module)
+> str(Modules)
 List of 4
 $ ModuleResult      :'data.frame':	2939 obs. of  2 variables:
   ..$ ID     : chr [1:2939] "GO:0000002" "GO:0000018" "GO:0000038" "GO:0000041" ...
@@ -242,7 +242,31 @@ $ ModuleResult      :'data.frame':	2939 obs. of  2 variables:
   .. ..$ : chr [1:2974] "label" "GO:0000002" "GO:0000018" "GO:0000038" ...
 
 ```
-###
+### Show_Module（）: Display the Term of the Pathway in Each Pathways Module
+```
+Modules_Inner = Show_Module(Modules,c(25,27,34))
+
+> str(Modules_Inner)
+List of 3
+$ ME25:'data.frame':	16 obs. of  4 variables:
+  ..$ GO        : chr [1:16] "GO:0006023" "GO:0006024" "GO:0006029" "GO:0015012" ...
+  ..$ Name      : chr [1:16] "aminoglycan biosynthetic process" "glycosaminoglycan biosynthetic process" "proteoglycan metabolic process" "heparan sulfate proteoglycan biosynthetic process" ...
+  ..$ Ancestor  : chr [1:16] "organic substance metabolic process" "organic substance metabolic process" "organic substance metabolic process" "organic substance metabolic process" ...
+  ..$ AncestorGO: chr [1:16] "GO:0071704" "GO:0071704" "GO:0071704" "GO:0071704" ...
+
+ $ ME27:'data.frame':	11 obs. of  4 variables:
+  ..$ GO        : chr [1:11] "GO:0007173" "GO:0007176" "GO:0038127" "GO:0042058" ...
+  ..$ Name      : chr [1:11] "epidermal growth factor receptor signaling pathway" "regulation of epidermal growth factor-activated receptor activity" "ERBB signaling pathway" "regulation of epidermal growth factor receptor signaling pathway" ...
+  ..$ Ancestor  : chr [1:11] "regulation of cellular process" "regulation of cellular process" "regulation of cellular process" "regulation of cellular process" ...
+  ..$ AncestorGO: chr [1:11] "GO:0050794" "GO:0050794" "GO:0050794" "GO:0050794" ...
+
+ $ ME34:'data.frame':	8 obs. of  4 variables:
+  ..$ GO        : chr [1:8] "GO:0003351" "GO:0007288" "GO:0030317" "GO:0060294" ...
+  ..$ Name      : chr [1:8] "epithelial cilium movement involved in extracellular fluid movement" "sperm axoneme assembly" "flagellated sperm motility" "cilium movement involved in cell motility" ...
+  ..$ Ancestor  : chr [1:8] "movement of cell or subcellular component" "movement of cell or subcellular component" "movement of cell or subcellular component" "movement of cell or subcellular component" ...
+  ..$ AncestorGO: chr [1:8] "GO:0006928" "GO:0006928" "GO:0006928" "GO:0006928" ...
+
+```
 
 ## Installation
 
