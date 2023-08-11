@@ -186,7 +186,7 @@ List of 2
 
 A pathway matrix can be obtained by using BioMLF(, target = 'pathways'). The WGCNA-based method aggregates pathways with similar expression patterns into a module, and uses biological semantic information to assist in screening modules with high biological interpretability, and compares these biological pathway modules association with phenotype.
 
-### FindPara_Module（）：Using Biological Semantic Information to Assist in Selecting Optimal Parameters
+### FindParaModule（）：Using Biological Semantic Information to Assist in Selecting Optimal Parameters
 ```
 result=BioMLF ( TrainData = data , TestData = NULL ,              
          pathlistDB = pathlistDB ,                         
@@ -198,7 +198,7 @@ result=BioMLF ( TrainData = data , TestData = NULL ,
 
 Matrix=result$PathwaysMatrix
 
-Para=FindPara_Module(pathways_matrix = Matrix, minModuleSize = c(10,15,20,25), mergeCutHeight=c(0.1,0.15,0.2,0.25,0.3,0.35,0.4))
+Para=FindParaModule(pathways_matrix = Matrix, minModuleSize = c(10,15,20,25), mergeCutHeight=c(0.1,0.15,0.2,0.25,0.3,0.35,0.4))
 
 > str(Para)
 List of 2
@@ -214,7 +214,7 @@ List of 2
 
 ```
 ### PathwaysModule（）: Identifying Differential Modules with High Biological Interpretability
-We can use the optimal parameters provided by FindPara_Module ( ), or provide them yourself. 
+We can use the optimal parameters provided by FindParaModule ( ), or provide them yourself. 
 Then we can get the differential modules with high biological interpretability.
 ```
 Modules=PathwaysModule(pathways_matrix = Matrix , control_label = 0, minModuleSize = 10, mergeCutHeight = 0.4, cutoff = 70)
@@ -242,11 +242,11 @@ $ ModuleResult      :'data.frame':	2939 obs. of  2 variables:
   .. ..$ : chr [1:2974] "label" "GO:0000002" "GO:0000018" "GO:0000038" ...
 
 ```
-### Show_Module（）: Display the Term of the Pathway in Each Pathways Module
+### ShowModule（）: Display the Term of the Pathway in Each Pathways Module
 ```
-Modules_Inner = Show_Module(Modules,c(25,27,34))
+ModulesInner = ShowModule(Modules,c(25,27,34))
 
-> str(Modules_Inner)
+> str(ModulesInner)
 List of 3
 $ ME25:'data.frame':	16 obs. of  4 variables:
   ..$ GO        : chr [1:16] "GO:0006023" "GO:0006024" "GO:0006029" "GO:0015012" ...
