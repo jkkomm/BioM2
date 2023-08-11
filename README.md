@@ -110,6 +110,30 @@ Time difference of 10.99379 mins
 [1] "######——————  Well Done！！！——————######"
 
 > str(result)
+$ Prediction :List of 5
+  ..$ Resample No. 1:'data.frame':	28 obs. of  2 variables:
+  .. ..$ sample    : chr [1:28] "201172200006_R04C01" "201172200008_R08C01" "201172200011_R04C01" "201172200012_R07C01" ...
+  .. ..$ prediction: num [1:28] 0.354 0.781 0.723 0.544 0.401 ...
+  ..$ Resample No. 2:'data.frame':	27 obs. of  2 variables:
+  .. ..$ sample    : chr [1:27] "201172200003_R06C01" "201172200004_R06C01" "201172200005_R06C01" "201172200011_R05C01" ...
+  .. ..$ prediction: num [1:27] 0.97 0.9942 0.2156 0.6554 0.0587 ...
+  ..$ Resample No. 3:'data.frame':	27 obs. of  2 variables:
+  .. ..$ sample    : chr [1:27] "201172200001_R07C01" "201172200006_R06C01" "201172200006_R08C01" "201172200019_R07C01" ...
+  .. ..$ prediction: num [1:27] 0.024 0.9319 0.9827 0.0119 0.9646 ...
+  ..$ Resample No. 4:'data.frame':	27 obs. of  2 variables:
+  .. ..$ sample    : chr [1:27] "201172200006_R05C01" "201172200012_R08C01" "201172200013_R04C01" "201172200050_R05C01" ...
+  .. ..$ prediction: num [1:27] 0.925 0.197 0.914 0.944 0.421 ...
+  ..$ Resample No. 5:'data.frame':	27 obs. of  2 variables:
+  .. ..$ sample    : chr [1:27] "201172200001_R06C01" "201172200004_R04C01" "201172200005_R07C01" "201172200016_R04C01" ...
+  .. ..$ prediction: num [1:27] 0.0504 0.4289 0.1212 0.9876 0.0164 ...
+ $ Metric     :'data.frame':	5 obs. of  5 variables:
+  ..$ resampling_id: int [1:5] 1 2 3 4 5
+  ..$ learner_name : chr [1:5] "liblinear" "liblinear" "liblinear" "liblinear" ...
+  ..$ AUC          : num [1:5] 0.964 0.938 0.913 0.994 0.952
+  ..$ ACC          : num [1:5] 0.928 0.785 0.821 0.961 0.884
+  ..$ PCCs         : num [1:5] 0.830 0.711 0.730 0.910 0.741
+ $ TotalMetric: Named num [1:3] 0.953 0.876 0.785
+  ..- attr(*, "names")= chr [1:3] "AUC" "ACC" "PCCs"
 
 ```
 ##  Biological interpretability
@@ -129,21 +153,32 @@ result=BioMLF ( TrainData = data , TestData = NULL ,
 [1] "------------========<<<<  Completed!  >>>>======-----------"
 [1] "-----------------------------------------------------------"
              id       cor      p.value adjust_p.value
-254    hsa05226 0.6821436 6.059108e-20   2.200668e-16
-165    hsa04814 0.6819709 6.242139e-20   2.267145e-16
-1141 GO:0015698 0.6633595 1.374259e-18   4.991309e-15
-692  GO:0006821 0.6517819 8.435684e-18   3.063840e-14
-557  GO:0003341 0.6499000 1.124604e-17   4.084562e-14
+254  GO:0001708 0.6421436 4.839108e-17   1.440668e-13
+165  GO:0072073 0.6349709 1.102139e-16   3.287145e-13
+1141 GO:0072009 0.6263595 3.534259e-16   1.051309e-13
+692  GO:0035265 0.6217819 4.435684e-16   1.323840e-12
+557  GO:0003341 0.6499000 7.614604e-16   2.264562e-12
                                       term
-254  Gastric cancer - Homo sapiens (human)
-165  Motor proteins - Homo sapiens (human)
-1141             inorganic anion transport
-692                     chloride transport
+254                cell fate specification
+165          kidney epithelium development
+1141        nephron epithelium development
+692                           organ growth
 557                        cilium movement
 Time difference of 8.649476 mins
 [1] "######——————  Well Done！！！——————######"
 
 > str(result)
+List of 2
+ $ PathwaysMatrix: num [1:136, 1:2974] 0 1 1 0 0 0 1 0 1 1 ...
+  ..- attr(*, "dimnames")=List of 2
+  .. ..$ : NULL
+  .. ..$ : chr [1:2974] "label" "GO:0000002" "GO:0000018" "GO:0000038" ...
+ $ PathwaysResult:'data.frame':	2973 obs. of  5 variables:
+  ..$ id            : chr [1:2973] "GO:0001708" "GO:0072073" "GO:0072009" "GO:0035265" ...
+  ..$ cor           : num [1:2973] 0.64 0.634 0.626 0.625 0.621 ...
+  ..$ p.value       : num [1:2973] 4.83e-17 1.10e-16 3.53e-16 4.43e-16 7.61e-16 ...
+  ..$ adjust_p.value: num [1:2973] 1.44e-13 3.28e-13 1.05e-12 1.32e-12 2.26e-12 ...
+  ..$ term          : chr [1:2973] "cell fate specification" "kidney epithelium development" "nephron epithelium development" "organ growth" ...
 
 ```
 
