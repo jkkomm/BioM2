@@ -321,7 +321,7 @@ VisMulti(,ShowModule_obj=ModulesInner)
 ![SM37](https://github.com/jkkomm/img/blob/main/SM37.png)
 
 ## Installation
-Not officially released yet
+Not yet officially published
 
 # Contribute
 
