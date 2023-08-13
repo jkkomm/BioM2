@@ -268,9 +268,25 @@ $ ME25:'data.frame':	16 obs. of  4 variables:
 
 ```
 ## Visualization
-VisMulti() can visualize the results with FindParaModule(), PathwaysModule(), ShowModule(),etc.
+VisMulti() can visualize the results with BioMFL(,target='pathways'),FindParaModule(), PathwaysModule(), ShowModule(),etc.
+
+### VisMulti ( , BioMFL_pathways_obj )
+Each point represents a pathway, and each pathway belongs to a biological category. The higher the point, the more significant the difference between the pathway and the phenotype
+```
+result=BioMLF ( TrainData = data , TestData = NULL ,              
+         pathlistDB = pathlistDB ,                         
+         FeatureAnno = FeatureAnno ,                       
+         classifier = 'liblinear' , nfolds = 5 ,          
+         target='pathways',                           ##==>>  [ target = 'pathways']
+         cores = 5                                        
+         )
+
+VisMulti(BioMFL_pathways_obj = result)
+```
+![PathwaysResult](https://github.com/jkkomm/img/blob/main/Circular_M.png)
 
 ### VisMulti ( , FindParaModule_obj )
+Visualize the process of selecting optimal parameters based on biological terms.
 ```
 Para=FindParaModule(pathways_matrix = Matrix, minModuleSize = c(10,15,20,25), mergeCutHeight=c(0.1,0.15,0.2,0.25,0.3,0.35,0.4))
 
@@ -282,6 +298,7 @@ VisMulti(FindParaModule_obj=Para)
 
 
 ### VisMulti ( , PathwaysModule_obj )
+Each point represents a path, and points of the same color belong to the same difference module
 ```
 Modules=PathwaysModule(pathways_matrix = Matrix , control_label = 0, minModuleSize = 10, mergeCutHeight = 0.4, cutoff = 70)
 
@@ -290,6 +307,7 @@ VisMulti(PathwaysModule_obj=Modules)
 ![DE_PathwaysModule](https://github.com/jkkomm/img/blob/main/PM1.png)
 
 ### VisMulti ( , ShowModule_obj ) 
+Summarize the biological information of the pathways in the module with a wordcloud.
 ```
 Modules=PathwaysModule(pathways_matrix = Matrix , control_label = 0, minModuleSize = 10, mergeCutHeight = 0.4, cutoff = 70)
 
@@ -303,18 +321,9 @@ VisMulti(,ShowModule_obj=ModulesInner)
 ![SM37](https://github.com/jkkomm/img/blob/main/SM37.png)
 
 ## Installation
-
+Not officially released yet
 
 # Contribute
-[(Back to top)](#table-of-contents)
 
-You can use this section to highlight how people can contribute to your project.
 
-You can add information on how they can open issues or how they can sponsor the project.
 
-# License
-[(Back to top)](#table-of-contents)
-
-You can also mention what license the project uses. I usually add it like this:
-
-[MIT license](./LICENSE)
