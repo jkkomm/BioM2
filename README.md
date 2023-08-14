@@ -283,7 +283,7 @@ result=BioMLF ( TrainData = data , TestData = NULL ,
 
 VisMulti(BioMFL_pathways_obj = result)
 ```
-![PathwaysResult](https://github.com/jkkomm/img/blob/main/Circular_M.png)
+![PathwaysResult](https://github.com/jkkomm/img/blob/main/Manhattan.png)
 
 ### VisMulti ( , FindParaModule_obj )
 Visualize the process of selecting optimal parameters based on biological terms.
