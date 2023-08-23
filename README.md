@@ -13,6 +13,8 @@
 ## Motivation
 Identifying reproducible and interpretable biological patterns from high-dimensional omics data is a critical factor in understanding the risk mechanism of complex disease. As such, explainable machine learning can offer biological insight in addition to personalized risk scoring.
 
+## Core Workflow
+![BioMLF](https://github.com/jkkomm/img/blob/main/core_workflow.png)
 ## Deliverables
 We have implemented a biologically informed multi-stage machine learning framework termed __BioMLF__ specifically for phenotype prediction using omics-scale data based on prior biological information including gene ontological (GO) and/or KEGG pathways.   
 
