@@ -14,7 +14,7 @@
 Identifying reproducible and interpretable biological patterns from high-dimensional omics data is a critical factor in understanding the risk mechanism of complex disease. As such, explainable machine learning can offer biological insight in addition to personalized risk scoring.
 
 ## Core Workflow
-![BioM2](https://github.com/jkkomm/img/blob/main/core_workflow.png)
+![BioM2](https://github.com/jkkomm/img/blob/main/CoreWorkflow.png)
 ## Deliverables
 We have implemented a biologically informed multi-stage machine learning framework termed __BioM2__ specifically for phenotype prediction using omics-scale data based on prior biological information including gene ontological (GO) and/or KEGG pathways.   
 
@@ -28,7 +28,7 @@ We have implemented a biologically informed multi-stage machine learning framewo
 
 ## :writing_hand: Authors
 
-Shunjie Zhang  ----  (E-mail: 1838076459@qq.com)
+Shunjie Zhang  ----  (E-mail: zhang.shunjie@qq.com)
 
 # Tutorial
 
@@ -290,30 +290,30 @@ VisMulti(BioMFL_pathways_obj = result)
 ### VisMulti ( , FindParaModule_obj )
 Visualize the process of selecting optimal parameters based on biological terms.
 ```
-Para=FindParaModule(pathways_matrix = Matrix, minModuleSize = c(10,15,20,25), mergeCutHeight=c(0.1,0.15,0.2,0.25,0.3,0.35,0.4))
+Para=FindParaModule(pathways_matrix = Matrix, minModuleSize = c(6,8,10), mergeCutHeight=c(0.2,0.25,0.3,0.35,0.4,0.45,0.5))
 
 VisMulti(FindParaModule_obj=Para)
 
 ```
-![minModuleSize](https://github.com/jkkomm/img/blob/main/Find1.png)
-![mergeCutHeight](https://github.com/jkkomm/img/blob/main/Find2.png)
+![FindParaModule](https://github.com/jkkomm/img/blob/main/FindPara.png)
+
 
 
 ### VisMulti ( , PathwaysModule_obj )
 Each point represents a path, and points of the same color belong to the same difference module
 ```
-Modules=PathwaysModule(pathways_matrix = Matrix , control_label = 0, minModuleSize = 10, mergeCutHeight = 0.4, cutoff = 70)
+Modules=PathwaysModule(pathways_matrix = Matrix , control_label = 0, minModuleSize = 10, mergeCutHeight = 0.5, cutoff = 70)
 
 VisMulti(PathwaysModule_obj=Modules)
 ```
-![DE_PathwaysModule](https://github.com/jkkomm/img/blob/main/PM1.png)
+![DE_PathwaysModule](https://github.com/jkkomm/img/blob/main/PathwayModules_UMAP.png)
 
 ### VisMulti ( , ShowModule_obj ) 
 Summarize the biological information of the pathways in the module with a wordcloud.
 ```
 Modules=PathwaysModule(pathways_matrix = Matrix , control_label = 0, minModuleSize = 10, mergeCutHeight = 0.4, cutoff = 70)
 
-ModulesInner = ShowModule(Modules,c(25,27,34))
+ModulesInner = ShowModule(Modules,c(10,17,3))
 
 VisMulti(,ShowModule_obj=ModulesInner)
 
