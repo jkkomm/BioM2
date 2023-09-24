@@ -1,4 +1,4 @@
-# BioM2: Biologically explainable Machine Learning Framework for phenotype prediction using omics data <img src="https://github.com/jkkomm/img/blob/main/BioMFL%20(2).png" align="right" height="200" />
+# BioM2: Biologically explainable Machine Learning Framework for phenotype prediction using omics data <img src="https://github.com/jkkomm/img/blob/main/BioM2.png" align="right" height="200" />
 
 <!-- Add buttons here -->
   
