@@ -33,8 +33,15 @@ BioM2 has been uploaded to CRAN and can be installed using install.packages().
 ```
 install.packages('BioM2')
 ```
-
-
+You can install the latest release using the code below
+```
+install.packages("devtools")
+devtools::install_github("jkkomm/BioM2")
+```
+BioM2 is based on the mlr3 package. If you want to use more learners, please install the mlr3extralearners package！
+```
+remotes::install_github("mlr-org/mlr3extralearners@*release")
+```
 
 ## Data requirements
 
@@ -92,6 +99,11 @@ $ GO:0000023: chr [1:3] "2548" "2595" "8972"
 ## Prediction
 if you want to predict the phenotype.
 ```
+library(mlr3verse)
+library(caret)
+library(parallel)
+library(BioM2)
+
 result=BioM2 ( TrainData = data , TestData = NULL ,       ## If you only have one dataset
                 pathlistDB = pathlistDB ,                         ## ==>> [Pathway annotation data]
                 FeatureAnno = FeatureAnno ,                       ## ==>> [Feature annotation data]
@@ -146,6 +158,11 @@ If you want to explore which biological pathways have a potential impact on the 
 please set the parameter ( target = 'pathways') .Show the association between each biological pathway used for prediction and the phenotype.
 
 ```
+library(mlr3verse)
+library(caret)
+library(parallel)
+library(BioM2)
+
 result=BioM2 ( TrainData = data , TestData = NULL ,              
                 pathlistDB = pathlistDB ,                         
                 FeatureAnno = FeatureAnno ,                       
@@ -193,6 +210,11 @@ A pathway matrix can be obtained by using BioM2(, target = 'pathways'). The WGCN
 
 ### FindParaModule（）：Using Biological Semantic Information to Assist in Selecting Optimal Parameters
 ```
+library(mlr3verse)
+library(caret)
+library(parallel)
+library(BioM2)
+
 result=BioM2 ( TrainData = data , TestData = NULL ,              
                 pathlistDB = pathlistDB ,                         
                 FeatureAnno = FeatureAnno ,                       
@@ -202,6 +224,8 @@ result=BioM2 ( TrainData = data , TestData = NULL ,
 )
 
 Matrix=result$PathwaysMatrix
+
+library(WGCNA)
 
 Para=FindParaModule(pathways_matrix = Matrix, minModuleSize = c(10,15,20,25), mergeCutHeight=c(0.1,0.15,0.2,0.25,0.3,0.35,0.4))
 
@@ -222,6 +246,8 @@ $ BestParameter: Named num [1:3] 8 10 0.4
 We can use the optimal parameters provided by FindParaModule ( ), or provide them yourself. 
 Then we can get the differential modules with high biological interpretability.
 ```
+library(WGCNA)
+
 Modules=PathwaysModule(pathways_matrix = Matrix , control_label = 0, minModuleSize = 10, mergeCutHeight = 0.4, cutoff = 70)
 
 > str(Modules)
@@ -278,6 +304,20 @@ VisMulti() can visualize the results with BioMFL(,target='pathways'),FindParaMod
 ### VisMulti ( , BioM2_pathways_obj )
 Each point represents a pathway, and each pathway belongs to a biological category. The higher the point, the more significant the difference between the pathway and the phenotype
 ```
+#Load the required R packages
+library(ggpubr)
+library(ggthemes)
+library(CMplot)
+library(ggplot2)
+library(RColorBrewer)
+library(webshot)
+library(wordcloud2)
+library(dplyr)
+library(jiebaR)
+library(tm)
+library("htmlwidgets")
+
+
 result=BioM2 ( TrainData = data , TestData = NULL ,              
                 pathlistDB = pathlistDB ,                         
                 FeatureAnno = FeatureAnno ,                       
