@@ -288,7 +288,7 @@ result=BioM2 ( TrainData = data , TestData = NULL ,
 
 VisMulti(BioM2_pathways_obj = result)
 ```
-![PathwaysResult](https://github.com/jkkomm/img/blob/main/Manhattan.png)
+![PathwaysResult](https://github.com/jkkomm/img/blob/main/PathwaysResult_Circle.png)
 
 You can also set the parameter to ( type_text_table=TRUE )
 ```
