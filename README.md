@@ -5,10 +5,6 @@
   ![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/navendu-pottekkat/awesome-readme?include_prereleases)
 
 
-<!-- Remove this note if you plan to copy this README -->
-  
-  > **Note**: At present, the level of refinement in the details of this R package is suboptimal. Nonetheless, a series of novel functionalities are slated for inclusion to augment its capabilities.
-
 
 ## Motivation
 Identifying reproducible and interpretable biological patterns from high-dimensional omics data is a critical factor in understanding the risk mechanism of complex disease. As such, explainable machine learning can offer biological insight in addition to personalized risk scoring.
@@ -31,6 +27,13 @@ We have implemented a biologically informed multi-stage machine learning framewo
 Shunjie Zhang  ----  (E-mail: zhang.shunjie@qq.com)
 
 # Tutorial
+
+## Installation
+BioM2 has been uploaded to CRAN and can be installed using install.packages().
+```
+install.packages('BioM2')
+```
+
 
 
 ## Data requirements
@@ -93,7 +96,7 @@ result=BioM2 ( TrainData = data , TestData = NULL ,       ## If you only have on
                 pathlistDB = pathlistDB ,                         ## ==>> [Pathway annotation data]
                 FeatureAnno = FeatureAnno ,                       ## ==>> [Feature annotation data]
                 classifier = 'liblinear' , nfolds = 5 ,           ## Choose your learner( use "lrns()" ) , currently only cross-validation is supported
-                Inner_CV = 'None' , inner_folds=10 ,               ## Whether to use nested resampling 
+                Inner_CV = FALSE , inner_folds=10 ,               ## Whether to use nested resampling 
                 cores = 5                                         ## Parallel support
 )
 ...(More Detail)
@@ -272,7 +275,7 @@ $ ME34:'data.frame':	8 obs. of  4 variables:
 ## Visualization
 VisMulti() can visualize the results with BioMFL(,target='pathways'),FindParaModule(), PathwaysModule(), ShowModule(),etc.
 
-### VisMulti ( , BioMFL_pathways_obj )
+### VisMulti ( , BioM2_pathways_obj )
 Each point represents a pathway, and each pathway belongs to a biological category. The higher the point, the more significant the difference between the pathway and the phenotype
 ```
 result=BioM2 ( TrainData = data , TestData = NULL ,              
@@ -283,9 +286,15 @@ result=BioM2 ( TrainData = data , TestData = NULL ,
                 cores = 5                                        
 )
 
-VisMulti(BioMFL_pathways_obj = result)
+VisMulti(BioM2_pathways_obj = result)
 ```
 ![PathwaysResult](https://github.com/jkkomm/img/blob/main/Manhattan.png)
+
+You can also set the parameter to ( type_text_table=TRUE )
+```
+VisMulti(BioM2_pathways_obj = result,,type_text_table = T,text_table_theme = ttheme('mRed'))
+```
+![PathwaysResult](https://github.com/jkkomm/img/blob/main/PathwaysResult_Table.jpg)
 
 ### VisMulti ( , FindParaModule_obj )
 Visualize the process of selecting optimal parameters based on biological terms.
@@ -308,6 +317,13 @@ VisMulti(PathwaysModule_obj=Modules)
 ```
 ![DE_PathwaysModule](https://github.com/jkkomm/img/blob/main/PathwayModules_UMAP.png)
 
+You can also set the parameter to ( type_text_table=TRUE )
+```
+VisMulti(PathwaysModule_obj=Modules,type_text_table = T)
+```
+![PathwaysResult](https://github.com/jkkomm/img/blob/main/PathwayModule_Table.png)
+
+
 ### VisMulti ( , ShowModule_obj ) 
 Summarize the biological information of the pathways in the module with a wordcloud.
 ```
@@ -322,11 +338,10 @@ VisMulti(,ShowModule_obj=ModulesInner)
 ![SM34](https://github.com/jkkomm/img/blob/main/SM34.png)
 ![SM37](https://github.com/jkkomm/img/blob/main/SM37.png)
 
-## Installation
-Not yet officially published
-
 # Contribute
-
+Chen and Schwarz (2017) <arXiv:1712.0036v1>
+Horvath and Zhang (2005) <doi:10.2202/1544-6115.1128> 
+Langfelder and Horvath (2008) <doi:10.1186/1471-2105-9-559>
 
 
 
