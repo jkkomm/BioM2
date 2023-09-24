@@ -29,7 +29,7 @@ Shunjie Zhang  ----  (E-mail: zhang.shunjie@qq.com)
 # Tutorial
 
 ## Installation
-BioM2 has been uploaded to CRAN and can be installed using install.packages().
+BioM2 has been uploaded to CRAN .
 ```
 install.packages('BioM2')
 ```
