@@ -46,7 +46,7 @@ remotes::install_github("mlr-org/mlr3extralearners@*release")
 ## Data requirements
 
 BioM2 requires:
-  - Genome-wide DNA methylation data / Bulk RNA-seq data
+- Genome-wide DNA methylation data / Bulk RNA-seq data
 - Feature annotation data
 - Pathway annotation data  (Gene ontological and KEGG pathways are used in this tutorial)
 
@@ -298,10 +298,81 @@ $ ME34:'data.frame':	8 obs. of  4 variables:
 ..$ AncestorGO: chr [1:8] "GO:0006928" "GO:0006928" "GO:0006928" "GO:0006928" ...
 
 ```
-## Visualization
-VisMulti() can visualize the results with BioMFL(,target='pathways'),FindParaModule(), PathwaysModule(), ShowModule(),etc.
 
-### VisMulti ( , BioM2_pathways_obj )
+
+
+## Visualization
+- PlotPathFearture() : Visualisation of significant pathway-level features
+- PlotPathInner() : Visualisation Original features that make up the pathway
+- PlotPathNet() : Network diagram of pathways-level features
+- VisMultiModule() : Visualisation of the results of the analysis of the pathway modules
+- PlotCorModule() : Correlalogram for Biological Differences Modules
+
+
+
+### PlotPathFearture ()
+**Visualisation of significant pathway-level features**
+```
+#Load the required R packages
+library(ggplot2)
+library(viridis)
+
+
+result=BioM2 ( TrainData = data , TestData = NULL ,              
+                pathlistDB = pathlistDB ,                         
+                FeatureAnno = FeatureAnno ,                       
+                classifier = 'liblinear' , nfolds = 5 ,          
+                target='pathways',                           ##==>>  [ target = 'pathways']
+                cores = 5                                        
+)
+
+PlotPathFearture(BioM2_pathways_obj=result , pathlistDB = pathlistDB)
+```
+![barplot](https://github.com/jkkomm/img/blob/main/barplot.png)
+
+
+
+
+### PlotPathInner ()
+**Visualisation Original features that make up the pathway**
+```
+#Load the required R packages
+library(CMplot)
+
+#Select the top 10 most significant pathways
+PathNames=result$PathwaysResult$id[1:10]
+
+PlotPathInner(data=TrainData,pathlistDB=pathlistDB,FeatureAnno=FeatureAnno,
+              PathNames=PathNames)
+```
+![CMantan](https://github.com/jkkomm/img/blob/main/CMantan.png)
+
+
+
+
+### PlotPathNet ()
+**Network diagram of pathways-level features**
+```
+#Load the required R packages
+library(igraph)
+library(ggnetwork)
+library(ggplot2)
+library("intergraph")
+
+#Select the top 10 most significant pathways
+PathNames=result$PathwaysResult$id[1:10]
+
+PlotPathNet(data=TrainData,FeatureAnno = FeatureAnno,pathlistDB=pathlistDB,
+            PathNames=PathNames)
+
+```
+![network](https://github.com/jkkomm/img/blob/main/network.png)
+
+
+
+### VisMultiModule
+
+**VisMultiModule ( ,BioM2_pathways_obj ) ：**
 Each point represents a pathway, and each pathway belongs to a biological category. The higher the point, the more significant the difference between the pathway and the phenotype
 ```
 #Load the required R packages
@@ -312,9 +383,7 @@ library(ggplot2)
 library(RColorBrewer)
 library(webshot)
 library(wordcloud2)
-library(dplyr)
 library(jiebaR)
-library(tm)
 library("htmlwidgets")
 
 
@@ -326,51 +395,67 @@ result=BioM2 ( TrainData = data , TestData = NULL ,
                 cores = 5                                        
 )
 
-VisMulti(BioM2_pathways_obj = result)
+VisMultiModule(BioM2_pathways_obj = result)
 ```
 ![PathwaysResult](https://github.com/jkkomm/img/blob/main/CManhan2.png)
 
 
 
-
-### VisMulti ( , FindParaModule_obj )
+**VisMultiModule ( , FindParaModule_obj ) ：**
 Visualize the process of selecting optimal parameters based on biological terms.
 ```
-Para=FindParaModule(pathways_matrix = Matrix, minModuleSize = c(6,8,10), mergeCutHeight=c(0.2,0.25,0.3,0.35,0.4,0.45,0.5))
+Matrix=result$PathwaysMatrix
+Para=FindParaModule(pathways_matrix = Matrix, minModuleSize = c(6,7,8), mergeCutHeight=c(0.2,0.25,0.3,0.35,0.4,0.45,0.5))
 
-VisMulti(FindParaModule_obj=Para)
+VisMultiModule(FindParaModule_obj=Para)
 
 ```
 ![FindParaModule](https://github.com/jkkomm/img/blob/main/FindPara.png)
 
 
 
-### VisMulti ( , PathwaysModule_obj )
+**VisMultiModule ( , PathwaysModule_obj ) ：**
 Each point represents a path, and points of the same color belong to the same difference module
 ```
-Modules=PathwaysModule(pathways_matrix = Matrix , control_label = 0, minModuleSize = 10, mergeCutHeight = 0.5, cutoff = 70)
+Matrix=result$PathwaysMatrix
+Modules=PathwaysModule(pathways_matrix = Matrix , control_label = 0, minModuleSize = 6, mergeCutHeight = 0.3, cutoff = 70)
 
-VisMulti(PathwaysModule_obj=Modules)
+VisMultiModule(PathwaysModule_obj=Modules)
 ```
 ![DE_PathwaysModule](https://github.com/jkkomm/img/blob/main/UMAP.png)
 
+Violin plot showing statistics for the pathway modules
+```
+Matrix=result$PathwaysMatrix
+Modules=PathwaysModule(pathways_matrix = Matrix , control_label = 0, minModuleSize = 6, mergeCutHeight = 0.3, cutoff = 70)
 
+VisMultiModule(PathwaysModule_obj=Modules,volin=TURE,control_label=0,module=c(14,15,28,4)))
+```
+![Violin](https://github.com/jkkomm/img/blob/main/boxplot.png)
 
-
-
-### VisMulti ( , ShowModule_obj ) 
+**VisMultiModule ( , ShowModule_obj )  ：**
 Summarize the biological information of the pathways in the module with a wordcloud.
 ```
-Modules=PathwaysModule(pathways_matrix = Matrix , control_label = 0, minModuleSize = 10, mergeCutHeight = 0.4, cutoff = 70)
+Matrix=result$PathwaysMatrix
+Modules=PathwaysModule(pathways_matrix = Matrix , control_label = 0, minModuleSize = 6, mergeCutHeight = 0.3, cutoff = 70)
 
 ModulesInner = ShowModule(Modules,c(14,15,28,4))
 
-VisMulti(ShowModule_obj=ModulesInner)
+VisMultiModule(ShowModule_obj=ModulesInner)
 
 ```
 ![SM25](https://github.com/jkkomm/img/blob/main/WordCloud.png)
 
+### PlotCorModule()
+**Correlalogram for Biological Differences Modules**
+```
+Matrix=result$PathwaysMatrix
+Modules=PathwaysModule(pathways_matrix = Matrix , control_label = 0, minModuleSize = 6, mergeCutHeight = 0.3, cutoff = 70)
 
+PlotCorModule=(PathwaysModule_obj=Modules)
+
+```
+![Cor](https://github.com/jkkomm/img/blob/main/Cor.png)
 # Contribute
 Chen and Schwarz (2017) <arXiv:1712.0036v1>
 Horvath and Zhang (2005) <doi:10.2202/1544-6115.1128> 
