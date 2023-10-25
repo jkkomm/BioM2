@@ -10,7 +10,7 @@
 Identifying reproducible and interpretable biological patterns from high-dimensional omics data is a critical factor in understanding the risk mechanism of complex disease. As such, explainable machine learning can offer biological insight in addition to personalized risk scoring.
 
 ## Core Workflow
-![BioM2](https://github.com/jkkomm/img/blob/main/CoreWorkflow.png)
+![BioM2](https://github.com/jkkomm/img/blob/main/Architect.png)
 ## Deliverables
 We have implemented a biologically informed multi-stage machine learning framework termed __BioM2__ specifically for phenotype prediction using omics-scale data based on prior biological information including gene ontological (GO) and/or KEGG pathways.   
 
@@ -328,13 +328,10 @@ result=BioM2 ( TrainData = data , TestData = NULL ,
 
 VisMulti(BioM2_pathways_obj = result)
 ```
-![PathwaysResult](https://github.com/jkkomm/img/blob/main/PathwaysResult_Circle.png)
+![PathwaysResult](https://github.com/jkkomm/img/blob/main/CManhan2.png)
 
-You can also set the parameter to ( type_text_table=TRUE )
-```
-VisMulti(BioM2_pathways_obj = result,,type_text_table = T,text_table_theme = ttheme('mRed'))
-```
-![PathwaysResult](https://github.com/jkkomm/img/blob/main/PathwaysResult_Table.jpg)
+
+
 
 ### VisMulti ( , FindParaModule_obj )
 Visualize the process of selecting optimal parameters based on biological terms.
@@ -355,13 +352,10 @@ Modules=PathwaysModule(pathways_matrix = Matrix , control_label = 0, minModuleSi
 
 VisMulti(PathwaysModule_obj=Modules)
 ```
-![DE_PathwaysModule](https://github.com/jkkomm/img/blob/main/PathwayModules_UMAP.png)
+![DE_PathwaysModule](https://github.com/jkkomm/img/blob/main/UMAP.png)
 
-You can also set the parameter to ( type_text_table=TRUE )
-```
-VisMulti(PathwaysModule_obj=Modules,type_text_table = T)
-```
-![PathwaysResult](https://github.com/jkkomm/img/blob/main/PathwayModule_Table.png)
+
+
 
 
 ### VisMulti ( , ShowModule_obj ) 
@@ -369,14 +363,13 @@ Summarize the biological information of the pathways in the module with a wordcl
 ```
 Modules=PathwaysModule(pathways_matrix = Matrix , control_label = 0, minModuleSize = 10, mergeCutHeight = 0.4, cutoff = 70)
 
-ModulesInner = ShowModule(Modules,c(10,17,3))
+ModulesInner = ShowModule(Modules,c(14,15,28,4))
 
-VisMulti(,ShowModule_obj=ModulesInner)
+VisMulti(ShowModule_obj=ModulesInner)
 
 ```
-![SM25](https://github.com/jkkomm/img/blob/main/SM25.png)
-![SM34](https://github.com/jkkomm/img/blob/main/SM34.png)
-![SM37](https://github.com/jkkomm/img/blob/main/SM37.png)
+![SM25](https://github.com/jkkomm/img/blob/main/WordCloud.png)
+
 
 # Contribute
 Chen and Schwarz (2017) <arXiv:1712.0036v1>
