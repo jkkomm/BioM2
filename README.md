@@ -357,16 +357,24 @@ PlotPathInner(data=TrainData,pathlistDB=pathlistDB,FeatureAnno=FeatureAnno,
 library(igraph)
 library(ggnetwork)
 library(ggplot2)
-library("intergraph")
+
+result=BioM2 ( TrainData = data , TestData = NULL ,              
+                pathlistDB = pathlistDB ,                         
+                FeatureAnno = FeatureAnno ,                       
+                classifier = 'liblinear' , nfolds = 5 ,          
+                target='pathways',                           ##==>>  [ target = 'pathways']
+                cores = 5                                        
+)
 
 #Select the top 10 most significant pathways
 PathNames=result$PathwaysResult$id[1:10]
 
-PlotPathNet(data=TrainData,FeatureAnno = FeatureAnno,pathlistDB=pathlistDB,
+PlotPathNet(data=TrainData,BioM2_pathways_obj=result,
+            FeatureAnno = FeatureAnno,pathlistDB=pathlistDB,
             PathNames=PathNames)
 
 ```
-![network](https://github.com/jkkomm/img/blob/main/network.png)
+![network](https://github.com/jkkomm/img/blob/main/network.jpg)
 
 
 
