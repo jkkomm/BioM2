@@ -24,7 +24,7 @@ We have implemented a biologically informed multi-stage machine learning framewo
 
 ## :writing_hand: Authors
 
-Shunjie Zhang  ----  (E-mail: zhang.shunjie@qq.com)
+Shunjie Zhang  ----  (E-mail: 202220148490@mail.scut.edu.cn)
 
 # Tutorial
 
