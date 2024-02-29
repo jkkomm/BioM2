@@ -10,7 +10,7 @@
 Identifying reproducible and interpretable biological patterns from high-dimensional omics data is a critical factor in understanding the risk mechanism of complex disease. As such, explainable machine learning can offer biological insight in addition to personalized risk scoring.
 
 ## Core Workflow
-![BioM2](https://github.com/jkkomm/img/blob/main/Architect.png)
+![BioM2](https://github.com/jkkomm/img/blob/main/Architect.jpg)
 ## Deliverables
 We have implemented a biologically informed multi-stage machine learning framework termed __BioM2__ specifically for phenotype prediction using omics-scale data based on prior biological information including gene ontological (GO) and/or KEGG pathways.   
 
