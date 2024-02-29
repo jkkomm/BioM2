@@ -1,4 +1,4 @@
-# BioM2: Biologically explainable Machine Learning Framework for phenotype prediction using omics data <img src="https://github.com/jkkomm/img/blob/main/BioM2.png" align="right" height="180" />
+# BioM2: Biologically-informed multi-stage machine learning for phenotype prediction using omics data <img src="https://github.com/jkkomm/img/blob/main/BioM2.png" align="right" height="180" />
 
 <!-- Add buttons here -->
   
@@ -242,9 +242,9 @@ $ BestParameter: Named num [1:3] 8 10 0.4
 ..- attr(*, "names")= chr [1:3] "power" "ModuleSize" "mergeCutHeight"
 
 ```
-### PathwaysModule（）: Identifying Differential Modules with High Biological Interpretability
+### PathwaysModule（）: Identifying Illness-relevant  Modules with High Biological Interpretability
 We can use the optimal parameters provided by FindParaModule ( ), or provide them yourself. 
-Then we can get the differential modules with high biological interpretability.
+Then we can get the illness-relevant modules with high biological interpretability.
 ```
 library(WGCNA)
 
@@ -273,7 +273,7 @@ $ Matrix            : num [1:136, 1:2974] 0 1 1 0 0 0 1 0 1 1 ...
 .. ..$ : chr [1:2974] "label" "GO:0000002" "GO:0000018" "GO:0000038" ...
 
 ```
-### ShowModule（）: Display the Term of the Pathway in Each Pathways Module
+### ShowModule（）: Display the Term of the Pathway in Each Pathway-level Module
 ```
 ModulesInner = ShowModule(Modules,c(25,27,34))
 
@@ -306,7 +306,7 @@ $ ME34:'data.frame':	8 obs. of  4 variables:
 - PlotPathInner() : Visualisation Original features that make up the pathway
 - PlotPathNet() : Network diagram of pathways-level features
 - VisMultiModule() : Visualisation of the results of the analysis of the pathway modules
-- PlotCorModule() : Correlalogram for Biological Differences Modules
+- PlotCorModule() : Correlalogram for Illness-relevant Modules
 
 
 
@@ -423,7 +423,7 @@ VisMultiModule(FindParaModule_obj=Para)
 
 
 **VisMultiModule ( , PathwaysModule_obj ) ：**
-Each point represents a path, and points of the same color belong to the same difference module
+Each point represents a path, and points of the same color belong to the same illness-relevant module
 ```
 Matrix=result$PathwaysMatrix
 Modules=PathwaysModule(pathways_matrix = Matrix , control_label = 0, minModuleSize = 6, mergeCutHeight = 0.3, cutoff = 70)
@@ -455,7 +455,7 @@ VisMultiModule(ShowModule_obj=ModulesInner)
 ![SM25](https://github.com/jkkomm/img/blob/main/WordCloud.png)
 
 ### PlotCorModule()
-**Correlalogram for Biological Differences Modules**
+**Correlalogram for illness-relevant modules**
 ```
 Matrix=result$PathwaysMatrix
 Modules=PathwaysModule(pathways_matrix = Matrix , control_label = 0, minModuleSize = 6, mergeCutHeight = 0.3, cutoff = 70)
