@@ -2,7 +2,7 @@ Package: BioM2
 Title: Biologically Explainable Machine Learning Framework
 Version: 1.0.1
 Author: Shunjie Zhang and Junfang Chen
-Maintainer: Shunjie Zhang <zhang.shunjie@qq.com>
+Maintainer: Shunjie Zhang <202220148490@mail.scut.edu.cn>
 Description: Biologically Explainable Machine Learning Framework for Phenotype Prediction using omics data described in Chen and Schwarz (2017) <arXiv:1712.0036v1>.Identifying reproducible and interpretable biological patterns from high-dimensional omics data is a critical factor in understanding the risk mechanism of complex disease. As such, explainable machine learning can offer biological insight in addition to personalized risk scoring.In this process, a feature space of biological pathways will be generated, and the feature space can also be subsequently analyzed using WGCNA-based (Described in Horvath and Zhang (2005) <doi:10.2202/1544-6115.1128> and Langfelder and Horvath (2008) <doi:10.1186/1471-2105-9-559> ) methods.
 License: MIT + file LICENSE
 Encoding: UTF-8
