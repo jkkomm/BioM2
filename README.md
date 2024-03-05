@@ -16,11 +16,11 @@ We have implemented a biologically informed multi-stage machine learning framewo
 
 **Features of BioM2 in a nutshell**:   
   
-  1. Applicability for multiple omics data modalities (e.g. methylome, transcriptome). 
-2. Various biological stratification strategies.    
-3. Prioritizing outcome-associated functional patterns.   
-4. Personalized scoring based on biological stratified patterns.   
-5. Possibility for an extension to learning models of interest.   
+1. Phenotype prediction using whole-genome DNA methylation data and genome-wide gene expression data.
+2. Intrinsic ranking of outcome-associated functional patterns.    
+3. Functional patterns can be used for biological stratification on an individual subject basis.   
+4. Modularisation of functional patterns and subsequent network analysis of these modules.   
+5. Various choice of conventional machine learning models that can be integrated within the BioM2 framework.   
 
 ## :writing_hand: Authors
 
