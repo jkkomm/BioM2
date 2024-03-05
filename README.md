@@ -33,12 +33,12 @@ BioM2 has been uploaded to CRAN .
 ```
 install.packages('BioM2')
 ```
-You can install the latest release using the code below
+The latest release can be installed using the code provided below.
 ```
 install.packages("devtools")
 devtools::install_github("jkkomm/BioM2")
 ```
-BioM2 is based on the mlr3 package. If you want to use more learners, please install the mlr3extralearners package！
+BioM2 is built on the mlr3 package. To use additional learners, please install the mlr3extralearners package.
 ```
 remotes::install_github("mlr-org/mlr3extralearners@*release")
 ```
