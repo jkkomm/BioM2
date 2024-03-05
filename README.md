@@ -97,7 +97,7 @@ $ GO:0000023: chr [1:3] "2548" "2595" "8972"
 
 
 ## Prediction
-if you want to predict the phenotype.
+To predict the phenotype, follow these steps.
 ```
 library(mlr3verse)
 library(caret)
@@ -154,8 +154,8 @@ $ TotalMetric: Named num [1:3] 0.953 0.876 0.785
 
 ```
 ##  Biological interpretability
-If you want to explore which biological pathways have a potential impact on the disease/phenotype,
-please set the parameter ( target = 'pathways') .Show the association between each biological pathway used for prediction and the phenotype.
+To explore the potential impact of biological pathways on the disease/phenotype, set the parameter (target='pathways').
+Show the association between each biological pathway used for prediction and the phenotype.
 
 ```
 library(mlr3verse)
@@ -206,7 +206,7 @@ $ PathwaysResult:'data.frame':	2973 obs. of  5 variables:
 
 ## Pathways Module
 
-A pathway matrix can be obtained by using BioM2(, target = 'pathways'). The WGCNA-based method aggregates pathways with similar expression patterns into a module, and uses biological semantic information to assist in screening modules with high biological interpretability, and compares these biological pathway modules association with phenotype.
+A pathway matrix can be obtained by using BioM2(, target = 'pathways'). The WGCNA method aggregates pathways with similar expression patterns into a module, and uses biological semantic information to assist in screening modules with high biological interpretability, and compares these biological pathway modules association with phenotype.
 
 ### FindParaModule（）：Using Biological Semantic Information to Assist in Selecting Optimal Parameters
 ```
@@ -243,8 +243,8 @@ $ BestParameter: Named num [1:3] 8 10 0.4
 
 ```
 ### PathwaysModule（）: Identifying Illness-relevant  Modules with High Biological Interpretability
-We can use the optimal parameters provided by FindParaModule ( ), or provide them yourself. 
-Then we can get the illness-relevant modules with high biological interpretability.
+The optimal parameters can be provided by FindParaModule() or chosen by the user. 
+The modules relevant to the illness can then be obtained, with high biological interpretability.
 ```
 library(WGCNA)
 
