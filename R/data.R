@@ -34,8 +34,8 @@ NULL
 #' @docType data
 #' @name MethylAnno
 #'
-#' @title An example about FeatureAnno
-#' @description  An example about FeatureAnno
+#' @title An example about FeatureAnno for methylation data
+#' @description  An example about FeatureAnno for methylation data
 #' @details The annotation data stored in a data.frame for probe
 #' mapping. It must have at least two columns named 'ID' and 'entrezID'.
 #'
@@ -45,12 +45,25 @@ NULL
 #' }
 NULL
 
+#' @docType data
+#' @name TransAnno
+#'
+#' @title An example about FeatureAnno for gene expression
+#' @description  An example about FeatureAnno for gene expression
+#' @details The annotation data stored in a data.frame for probe
+#' mapping. It must have at least two columns named 'ID' and 'entrezID'.
+#'
+#' @format A data frame :
+#' \describe{
+#'   ...
+#' }
+NULL
 
 #' @docType data
 #' @name MethylData_Test
 #'
-#' @title An example about TrainData/TestData
-#' @description  An example about TrainData/TestData
+#' @title An example about TrainData/TestData for methylation data
+#' @description  An example about TrainData/TestData for methylation data
 #' MethylData_Test.
 #' @details The first column
 #' is the label or the output. For binary classes,
@@ -61,6 +74,20 @@ NULL
 #' }
 NULL
 
+#' @docType data
+#' @name TransData_Test
+#'
+#' @title An example about TrainData/TestData for gene expression
+#' @description  An example about TrainData/TestData for gene expression
+#' MethylData_Test.
+#' @details The first column
+#' is the label or the output. For binary classes,
+#' 0 and 1 are used to indicate the class member.
+#' @format A data frame :
+#' \describe{
+#'   ...
+#' }
+NULL
 
 #' @docType data
 #' @name GO2ALLEGS_BP

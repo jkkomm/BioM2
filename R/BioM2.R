@@ -17,7 +17,7 @@
 #'
 #' @return The predicted output for the test data.
 #' @import mlr3verse
-#' @importFrom mlr3 as_task_classif lrn rsmp msr resample
+#' @importFrom mlr3 as_task_classif lrn rsmp msr resample as_task_regr
 #' @export
 #' @author Shunjie Zhang
 #' @examples
@@ -71,6 +71,31 @@ baseModel=function ( trainData, testData, predMode = "probability",
         predict=model$predict(testData)$prob[,2]
         return(predict)
       }
+    }else if( predMode == 'regression'){
+      classifier=paste0('regr.',classifier,'')
+      trainData[,1]=as.numeric(trainData[,1])
+      testData[,1]=as.numeric(testData[,1])
+      trainData=as_task_regr(trainData,target='label')
+      testData=as_task_regr(testData,target='label')
+      model=lrn(classifier)
+      if(!is.null(paramlist)){
+        at = auto_tuner(
+          tuner = tnr("grid_search", resolution = 5, batch_size = 5),
+          learner =  model,
+          search_space = paramlist,
+          resampling = rsmp("cv", folds =5),
+          measure = msr("regr.mae")
+        )
+        at$train(trainData)
+        model$param_set$values = at$tuning_result$learner_param_vals[[1]]
+        model$train(trainData)
+        predict=model$predict(testData)$response
+        return(predict)
+      }else{
+        model$train(trainData)
+        predict=model$predict(testData)$response
+        return(predict)
+      }
     }
   }
   else if(is.null(testData)){
@@ -89,6 +114,18 @@ baseModel=function ( trainData, testData, predMode = "probability",
       re=as.data.frame(as.data.table(rr))[,c(1,5)]
       re=re[order(re$row_ids),][,2]
       return(re)
+    }else if(predMode == 'regression'){
+      classifier=paste0('regr.',classifier,'')
+      trainData=as_task_regr(trainData,target='label')
+      model=lrn(classifier)
+      #set.seed(seed)
+      sink(nullfile())
+      rr=resample(trainData, model, rsmp("cv", folds = inner_folds))$prediction()
+      sink()
+      re=as.data.frame(as.data.table(rr))[,c(1,3)]
+      re=re[order(re$row_ids),][,2]
+      return(re)
+
     }
   }
 }
@@ -683,7 +720,7 @@ BioM2=function(TrainData=NULL,TestData=NULL,pathlistDB=NULL,FeatureAnno=NULL,res
                                         label=NULL,cutoff=cutoff2,preMode='probability',classifier =classifier,cores=cores)
           matrix_pathways=do.call(rbind,list_pathways)
           matrix_pathways=matrix_pathways[,c(1,index)]
-
+          rownames(matrix_pathways)=rownames(TrainData)[unlist(Resampling)]
           if(save_pathways_matrix==TRUE){
             saveRDS(matrix_pathways,'pathways_matrix.rds')
             if(verbose)print('     |||==>>> Save the Pathways-Matrix ')
@@ -768,6 +805,7 @@ BioM2=function(TrainData=NULL,TestData=NULL,pathlistDB=NULL,FeatureAnno=NULL,res
       colnames(newtest)=names(testDataList)
       newtest=cbind(label=testDataList[[1]]$label,newtest)
       matrix_pathways=newtest
+      rownames(matrix_pathways)=rownames(TestData)
       if(verbose)print(paste0('     |>min correlation of pathways=====>>>',round(min(corr),digits = 3),'......','max correlation of pathways===>>>',round(max(corr),digits = 3)))
       if(verbose)print('     <<< PredictPathways Done! >>>     ')
       if(save_pathways_matrix==TRUE){
@@ -845,7 +883,7 @@ BioM2=function(TrainData=NULL,TestData=NULL,pathlistDB=NULL,FeatureAnno=NULL,res
       pre=as.factor(pre)
       Record[1,3]=confusionMatrix(pre, testDataY)$overall['Accuracy'][[1]]
       if(verbose)print(paste0('######~~~~',classifier2,'==>','AUC:',round(Record[1,2],digits = 3),' ','ACC:',round(Record[1,3],digits = 3),' ','PCCs:',round(Record[1,4],digits = 3)))
-      final=list('Prediction'=prediction,'Metric'=Record)
+      final=list('Prediction'=predict,'Metric'=Record)
       T2=Sys.time()
       if(verbose)print(T2-T1)
       if(verbose)print('######-------  Well Done!!!-------######')
@@ -1070,7 +1108,7 @@ PathwaysModule=function(pathways_matrix=NULL,control_label=NULL,power=NULL,minMo
     pvalue=unlist(lapply(1:ncol(ALL_eigengene),function(x) wilcox.test(ALL_eigengene_0[,x],ALL_eigengene_1[,x])$p.value))
     n=ncol(ALL_eigengene)-1
 
-    adjust=data.frame(module=colnames(ALL_eigengene),adjust_pvalue=p.adjust(pvalue,method=p.adjust.method))
+    adjust=data.frame(module=colnames(ALL_eigengene),pvalue=pvalue,adjust_pvalue=p.adjust(pvalue,method=p.adjust.method))
     adjust=adjust[-which(adjust$module=='label'),]
 
 
@@ -1152,7 +1190,7 @@ ShowModule=function(obj=NULL,ID_Module=NULL,exact=TRUE){
 
 
 
-#' Visualization of the results of functions in the BioM2 package
+#' Visualisation of the results of the analysis of the pathway modules
 #'
 #' @param BioM2_pathways_obj Results produced by BioM2(,target='pathways')
 #' @param FindParaModule_obj Results produced by FindParaModule()
@@ -1164,6 +1202,7 @@ ShowModule=function(obj=NULL,ID_Module=NULL,exact=TRUE){
 #' @param n_neighbors The size of local neighborhood (in terms of number of neighboring sample points) used for manifold approximation.
 #' Larger values result in more global views of the manifold, while smaller values result in more local data being preserved.
 #' In general values should be in the range 2 to 100.
+#' @param spread The effective scale of embedded points. In combination with min_dist, this determines how clustered/clumped the embedded points are.
 #' @param min_dist The effective minimum distance between embedded points.
 #' Smaller values will result in a more clustered/clumped embedding where nearby points on the manifold are drawn closer together,
 #' while larger values will result on a more even dispersal of points.
@@ -1181,15 +1220,17 @@ ShowModule=function(obj=NULL,ID_Module=NULL,exact=TRUE){
 #' @param width  image width
 #' @param height image height
 #' @param save_pdf Whether to save images in PDF format
+#' @param volin Can only be used when PathwaysModule_obj exists. ( Violin diagram )
+#' @param control_label Can only be used when PathwaysModule_obj exists. ( Control group label )
+#' @param module Can only be used when PathwaysModule_obj exists.( PathwaysModule ID )
+#' @param cols palette (vector of colour names)
 #'
-#' @return a pdf file
+#' @return a ggplot2 object
 #' @export
-#' @importFrom dplyr arrange
 #' @import ggplot2
 #' @import htmlwidgets
 #' @import jiebaR
-#' @import RColorBrewer
-#' @import tm
+#' @import ggsci
 #' @import CMplot
 #' @import uwot
 #' @import webshot
@@ -1198,12 +1239,17 @@ ShowModule=function(obj=NULL,ID_Module=NULL,exact=TRUE){
 #' @import ggthemes
 #' @importFrom utils data
 #' @importFrom  stats aggregate quantile
+#' @importFrom  ggstatsplot ggbetweenstats
 #'
-VisMulti=function(BioM2_pathways_obj=NULL,FindParaModule_obj=NULL,ShowModule_obj=NULL,PathwaysModule_obj=NULL,exact=TRUE,
+VisMultiModule=function(BioM2_pathways_obj=NULL,FindParaModule_obj=NULL,ShowModule_obj=NULL,PathwaysModule_obj=NULL,exact=TRUE,
                   type_text_table=FALSE,text_table_theme=ttheme('mOrange'),
-                  n_neighbors = 8, min_dist =2,target_weight = 0.5,
+                  volin=FALSE,control_label=0,module=NULL,cols=NULL,
+                  n_neighbors = 8,spread=1,min_dist =2,target_weight = 0.5,
                   size=1.5,alpha=1,ellipse=TRUE,ellipse.alpha=0.2,theme=ggthemes::theme_base(base_family = "serif"),
                   save_pdf=FALSE,width =7, height=7){
+  if(is.null(cols)){
+    cols = pal_d3("category20",alpha=alpha)(20)
+  }
   if(!is.null(BioM2_pathways_obj)){
     if(exact==FALSE){
       GO_Ancestor=NA
@@ -1266,14 +1312,16 @@ VisMulti=function(BioM2_pathways_obj=NULL,FindParaModule_obj=NULL,ShowModule_obj
       if(save_pdf){
         pic=CMplot(Anno,plot.type="c",
                    threshold=c(0.001,0.05)/nrow(pathways),threshold.col=c('red','orange'),
-                   multracks=FALSE, chr.den.col=NULL,H=2,axis.cex=1.5,file.output=T,
-                   file='pdf',height=height, width=width)
+                   multracks=FALSE, H=2,axis.cex=2,chr.den.col=NULL,col=cols,
+                   r=2.5,lab.cex=1.7,
+                   file.output=T,file='pdf',height=height, width=width)
         return(pic)
 
       }else{
         pic=CMplot(Anno,plot.type="c",
                    threshold=c(0.001,0.05)/nrow(pathways),threshold.col=c('red','orange'),
-                   multracks=FALSE, chr.den.col=NULL,H=2,axis.cex=1.5,file.output=F)
+                   r=2,lab.cex=1.7,
+                   multracks=FALSE, chr.den.col=NULL,H=2,axis.cex=1.7,col=cols,file.output=F)
         return(pic)
       }
     }
@@ -1294,8 +1342,7 @@ VisMulti=function(BioM2_pathways_obj=NULL,FindParaModule_obj=NULL,ShowModule_obj
         return(pic)
       }
     }else{
-      cols = c(brewer.pal(9, "Set1"),brewer.pal(8,"Set2")[1:8],brewer.pal(12,"Paired")
-               [1:12],brewer.pal(8,"Dark2")[1:8],brewer.pal(8,"Accent"))
+
       result=FindParaModule_obj$TotalResult
       result$minModuleSize=as.character(result$minModuleSize)
       pic=ggpubr::ggline(result,
@@ -1344,22 +1391,26 @@ VisMulti=function(BioM2_pathways_obj=NULL,FindParaModule_obj=NULL,ShowModule_obj
 
     }else{
       NAME=names(ShowModule_obj)
-      output=paste0(NAME,'_WordCloud.pdf')
+      output=paste0(NAME,'_WordCloud.png')
       p<-"
     words=ShowModule_obj[[NAME[xxx]]]$Name
     engine <- worker()
     segment <- segment(words, engine)
     wordfreqs <- freq(segment)
 
-    wordf <- arrange(wordfreqs, -freq)
-    rm=c('of','in','by','for','via','process','regulation','lengthening')
+    wordf <- wordfreqs[order(wordfreqs$freq,decreasing = T),]
+    rm=c('of','in','by','for','via','process','regulation','lengthening','to')
     wordf=wordf[-which(wordf$char %in% rm),]
-    my_graph <-wordcloud2(wordf,shape = 'circle')
+    #colors=rep('skyblue', nrow(wordf))
+    colors=rep('darkseagreen', nrow(wordf))
+    colors[1:5]='darkorange'
+    my_graph <-wordcloud2(wordf,shape = 'circle',color = colors)
+
     if(save_pdf){
       my_graph
       saveWidget(my_graph,'tmp.html',selfcontained = F)
-      webshot('tmp.html',output[xxx], delay =5, vwidth = 1024, vheight=1024)
-      return(my_graph)
+      webshot('tmp.html',output[xxx], delay =6)
+      #return(my_graph)
     }else{
       my_graph
       return(my_graph)
@@ -1373,7 +1424,7 @@ VisMulti=function(BioM2_pathways_obj=NULL,FindParaModule_obj=NULL,ShowModule_obj
   }
   if(!is.null(PathwaysModule_obj)){
     if(type_text_table){
-      Result=PathwaysModule_obj$DE_PathwaysModule
+      Result=PathwaysModule_obj$DE_PathwaysModule[,-4]
       Result$Fraction=round(Result$Fraction,2)
       Result$cor=round(Result$cor,2)
       colnames(Result)=c('Modules','Num_Pathways','Fraction','P-adjusted','Correlation')
@@ -1387,10 +1438,69 @@ VisMulti=function(BioM2_pathways_obj=NULL,FindParaModule_obj=NULL,ShowModule_obj
         return(pic)
       }
 
+    }else if(volin){
+      data=PathwaysModule_obj$Matrix[,PathwaysModule_obj$ModuleResult$ID]
+      data=moduleEigengenes(data,PathwaysModule_obj$ModuleResult$cluster)$eigengenes
+      data$label=PathwaysModule_obj$Matrix[,'label']
+      data$label=ifelse(data$label==control_label,'Control','Case')
+      colnames(data)[which(colnames(data)==paste0('ME',module))]='y'
+      label=NA
+      pic=ggstatsplot::ggbetweenstats(
+        data=data,
+        x = label,
+        y = y,
+        type = "nonparametric",
+        p.adjust.method ='fdr'
+      )+ labs(
+        x = "Phenotype",
+        y = "Module EigenPathways",
+        #title = 'Distribution of Module Eigengenes across Phenotype',
+        title = paste0('Module',module)
+      ) +
+        theme(
+          # This is the new default font in the plot
+          text = element_text(family = "serif", size = 8, color = "black"),
+          plot.title = element_text(
+            family = "serif",
+            size = 20,
+            face = "bold",
+            color = "#2a475e"
+          ),
+          plot.subtitle = element_text(
+            family = "serif",
+            size = 15,
+            face = "bold",
+            color="#1b2838"
+          ),
+          plot.title.position = "plot", # slightly different from default
+          axis.text = element_text(size = 10, color = "black"),
+          axis.title = element_text(size = 12)
+        )+
+        theme(
+          axis.ticks = element_blank(),
+          axis.line = element_line(colour = "grey50"),
+          panel.grid = element_line(color = "#b4aea9"),
+          panel.grid.minor = element_blank(),
+          panel.grid.major.x = element_blank(),
+          panel.grid.major.y = element_line(linetype = "dashed"),
+          panel.background = element_rect(fill = "#fbf9f4", color = "#fbf9f4"),
+          plot.background = element_rect(fill = "#fbf9f4", color = "#fbf9f4")
+        )
+      if(save_pdf){
+        pic
+        ggsave(paste0('PathwaysModule_ME',module,'_VolinPlot.pdf'),width =width, height =height)
+        return(pic)
+      }else{
+        pic
+        return(pic)
+      }
     }else{
       cluster=PathwaysModule_obj$ModuleResult
       cluster$cluster=paste0('ME',cluster$cluster)
       Result=PathwaysModule_obj$DE_PathwaysModule
+      if(nrow(Result)>10){
+        Result=Result[1:10,]
+      }
       meta=cluster[cluster$cluster %in% Result$module,]
       data=as.data.frame(PathwaysModule_obj$Matrix)
       pdata=data[,meta$ID]
@@ -1401,12 +1511,10 @@ VisMulti=function(BioM2_pathways_obj=NULL,FindParaModule_obj=NULL,ShowModule_obj
       rownames(test)=test$ID
       test=test[,-1]
       test$cluster=as.factor(test$cluster)
-      test_umap <- uwot::umap(test, n_neighbors = n_neighbors, min_dist = min_dist,
+      test_umap <- uwot::umap(test, n_neighbors = n_neighbors,spread=spread,min_dist = min_dist,
                               y = test$cluster, target_weight = target_weight)
       test_umap <- as.data.frame(test_umap)
       test_umap$Modules=test$cluster
-      cols = c(brewer.pal(9, "Set1"),brewer.pal(8,"Set2")[1:8],brewer.pal(12,"Paired")
-               [1:12],brewer.pal(8,"Dark2")[1:8],brewer.pal(8,"Accent"))
       pic=ggpubr::ggscatter(test_umap,
                             x='V1',
                             y='V2',
@@ -1442,5 +1550,354 @@ VisMulti=function(BioM2_pathways_obj=NULL,FindParaModule_obj=NULL,ShowModule_obj
 
 
 
+#' Visualisation of significant pathway-level features
+#'
+#' @param BioM2_pathways_obj Results produced by BioM2(,target='pathways')
+#' @param pathlistDB A list of pathways with pathway IDs and their corresponding genes ('entrezID' is used).
+#' For details, please refer to ( data("GO2ALLEGS_BP") )
+#' @param top Number of significant pathway-level features visualised
+#' @param p.adjust.method p-value adjustment method.(holm", "hochberg", "hommel",
+#' "bonferroni", "BH", "BY","fdr","none")
+#' @param alpha The alpha transparency, a number in (0,1). Detail for scale_fill_viridis()
+#' @param begin The (corrected) hue in (0,1) at which the color map begins. Detail for scale_fill_viridis().
+#' @param end The (corrected) hue in (0,1) at which the color map ends. Detail for scale_fill_viridis()
+#' @param option 	A character string indicating the color map option to use. Detail for scale_fill_viridis()
+#' @param seq Interval of x-coordinate
+#'
+#' @return a ggplot2 object
+#' @export
+#' @import ggplot2
+#' @import viridis
+#' @importFrom stats p.adjust
+
+PlotPathFearture=function(BioM2_pathways_obj=NULL,pathlistDB=NULL,top=10,p.adjust.method='none',begin=0.1,end=0.9,alpha=0.9,option='C',seq=1){
+
+  data=BioM2_pathways_obj$PathwaysResult
+  geneNum_pathways=sapply(1:length(pathlistDB),function(i) length(pathlistDB[[i]]))
+  pathlistDB=pathlistDB[which(geneNum_pathways > 20 & geneNum_pathways < 200 )]
+  data_top=data[1:top,]
+  if(p.adjust.method=='none'){
+    data_top$val=-log10(data_top$p.value)
+  }else{
+    data_top$val=-log10(p.adjust(data_top$p.value,method = p.adjust.method))
+  }
+  data_top=data_top[order(data_top$val),]
+  data_top$size=sapply(1:nrow(data_top),function(x) length(pathlistDB[[data_top$id[x]]]))
+  data_top$id=factor(data_top$id,levels = data_top$id)
+  max=max(data_top$val)+1
+  val=NA
+  id=NA
+  size=NA
+  term=NA
+  pic=ggplot(data_top) +
+    geom_col(aes(val, id,fill=size), width = 0.6)+
+    scale_fill_viridis(alpha=alpha,begin=begin,end=end,direction = -1,
+                       name='size',option = option)+
+    labs(
+      x = '-log(p) ',
+      y = NULL,
+      title = paste0('Top ',top,' Pathway-Level Features'),
+      shape='-log(P-value)'
+    )+
+    scale_x_continuous(
+      limits = c(0, max),
+      breaks = seq(0, max, by = seq),
+      expand = c(0, 0),
+      position = "top"
+    ) +
+    scale_y_discrete(expand = expansion(add = c(0, 0.5))) +
+    theme(
+      panel.background = element_rect(fill = "white"),
+      panel.grid.major.x = element_line(color = "#A8BAC4", linewidth = 0.3),
+      axis.ticks.length = unit(0, "mm"),
+      #axis.title = element_blank(),
+      axis.line.y.left = element_line(color = "black"),
+      axis.text.y = element_text(family = "serif", size = 12,face = 'bold',colour='black'),
+      axis.text.x = element_text(family = "serif", size = 13,colour='black'),
+      axis.title = element_text(size = 18,family = "serif",face = 'bold.italic',vjust = 5),
+      plot.title = element_text(size = 20,family = "serif",face = 'bold'),
+      legend.text = element_text(family = "serif",face = 'bold'),
+      legend.title = element_text(size=13,family = "serif",face = 'bold'),
+    )+
+    geom_text(
+      data = data_top,
+      aes(0, y = id, label = term),
+      hjust = 0,
+      nudge_x = 0.5,
+      colour = "white",
+      family = "serif",
+      size = 6
+    )
+  return(pic)
+}
 
 
+
+
+#' Visualisation Original features that make up the pathway
+#'
+#' @param data The input omics data
+#' @param pathlistDB A list of pathways with pathway IDs and their corresponding genes ('entrezID' is used).
+#' For details, please refer to ( data("GO2ALLEGS_BP") )
+#' @param FeatureAnno The annotation data stored in a data.frame for probe mapping.
+#' It must have at least two columns named 'ID' and 'entrezID'.
+#' (For details, please refer to data( data("MethylAnno") )
+#' @param PathNames A vector.A vector containing the names of pathways
+#' @param p.adjust.method p-value adjustment method.(holm", "hochberg", "hommel",
+#' "bonferroni", "BH", "BY","fdr","none")
+#' @param save_pdf Whether to save images in PDF format
+#' @param alpha The alpha transparency, a number in (0,1).
+#' @param cols palette (vector of colour names)
+#'
+#' @return a plot object
+#' @export
+#' @import ggplot2
+#' @import CMplot
+#' @import ggsci
+#' @importFrom stats p.adjust
+
+PlotPathInner=function(data=NULL,pathlistDB=NULL,FeatureAnno=NULL,PathNames=NULL,
+                       p.adjust.method='none',save_pdf=FALSE,alpha=1,cols=NULL){
+  Result=list()
+  if(is.null(cols)){
+    cols = pal_d3("category20",alpha=alpha)(20)
+  }
+  featureAnno=FeatureAnno[FeatureAnno$ID %in% colnames(data),]
+  for(i in 1:length(PathNames)){
+    cpg_id=featureAnno$ID[which(featureAnno$entrezID %in% pathlistDB[[PathNames[i]]])]
+    cpg_data=data[,c('label',cpg_id)]
+    cpg_0=cpg_data[which(cpg_data$label==unique(cpg_data$label)[1]),]
+    cpg_1=cpg_data[which(cpg_data$label==unique(cpg_data$label)[2]),]
+    pvalue=unlist(lapply(2:ncol(cpg_data),function(x) wilcox.test(cpg_0[,x],cpg_1[,x])$p.value))
+    if(p.adjust.method=='none'){
+      result=data.frame(SNP=cpg_id,Chromosome=rep(PathNames[i],length(cpg_id)),
+                        Position=sample(1:100000,length(cpg_id)),pvalue=pvalue)
+    }else{
+      result=data.frame(SNP=cpg_id,Chromosome=rep(PathNames[i],length(cpg_id)),
+                        Position=sample(1:100000,length(cpg_id)),pvalue=p.adjust(pvalue,method = p.adjust.method))
+    }
+    Result[[i]]=result
+  }
+  Result=do.call(rbind,Result)
+  pic=CMplot(Result,plot.type="c",
+             threshold=c(0.001,0.05),threshold.col=c('red','orange'),
+             multracks=FALSE, H=2,axis.cex=2,chr.den.col=NULL,col=cols,
+             r=2.5,lab.cex=2,outward = TRUE,signal.cex=2, signal.pch = 18,
+             file.output=save_pdf,file='pdf',height=13, width=13)
+  return(pic)
+}
+
+
+
+
+#' Correlalogram for Biological Differences Modules
+#'
+#' @param PathwaysModule_obj Results produced by PathwaysModule()
+#' @param alpha The alpha transparency, a number in (0,1). Detail for scale_fill_viridis()
+#' @param begin The (corrected) hue in (0,1) at which the color map begins. Detail for scale_fill_viridis().
+#' @param end The (corrected) hue in (0,1) at which the color map ends. Detail for scale_fill_viridis()
+#' @param option 	A character string indicating the color map option to use. Detail for scale_fill_viridis()
+#' @param family calligraphic style
+#' @return a ggplot object
+#' @export
+#' @import ggplot2
+#' @importFrom  ggstatsplot ggcorrmat
+#' @import viridis
+#'
+#'
+#'
+
+PlotCorModule=function(PathwaysModule_obj=NULL,
+                       alpha=0.7,begin=0.2,end=0.9,option="C",family="serif"){
+  colors=PathwaysModule_obj$ModuleResult$cluster
+  names(colors)=PathwaysModule_obj$ModuleResult$ID
+  ALL_eigengene=moduleEigengenes(PathwaysModule_obj$Matrix[,names(colors)],colors)$eigengenes
+  data=ALL_eigengene[,PathwaysModule_obj$DE_PathwaysModule$module]
+
+  pic=ggcorrmat(
+    data  = data,
+    type = "nonparametric",
+    ggcorrplot.args = list(show.legend =T,pch.cex=10),
+    title    = "Correlalogram for Biological Differences Modules",
+    subtitle = " ",
+    caption = " "
+  )+theme(
+    # This is the new default font in the plot
+    text = element_text(family = family, size = 8, color = "black"),
+    plot.title = element_text(
+      family = family,
+      size = 20,
+      face = "bold",
+      color = "black"
+    ),
+    plot.subtitle = element_text(
+      family = family,
+      size = 15,
+      face = "bold",
+      color="#1b2838"
+    ),
+    plot.title.position = "plot", # slightly different from default
+    axis.text.x = element_text(size = 12, color = "black"),
+    axis.text.y = element_text(size = 12, color = "black"),
+    axis.title = element_text(size = 15)
+  )+scale_fill_viridis(alpha=alpha,begin=begin,end=end,direction = -1,
+                       name='correlation',option = option)+
+    theme(legend.title =element_text(size = 10, color = "black"),
+          legend.text = element_text(size = 10,color = "black"))
+  pic$labels$caption=NULL
+  return(pic)
+}
+
+
+
+
+
+
+#' Network diagram of pathways-level features
+#'
+#' @param data The input omics data
+#' @param pathlistDB A list of pathways with pathway IDs and their corresponding genes ('entrezID' is used).
+#' For details, please refer to ( data("GO2ALLEGS_BP") )
+#' @param FeatureAnno The annotation data stored in a data.frame for probe mapping.
+#' It must have at least two columns named 'ID' and 'entrezID'.
+#' (For details, please refer to data( data("MethylAnno") )
+#' @param PathNames A vector.A vector containing the names of pathways
+#' @param cutoff Threshold for correlation between features within a pathway
+#' @param num    The first few internal features of each pathway that are most relevant to the phenotype
+#' @param BioM2_pathways_obj Results produced by BioM2()
+#'
+#' @return a ggplot object
+#' @export
+#' @import ggplot2
+#' @import ggnetwork
+#' @import igraph
+#' @import ggsci
+#' @import ggforce
+#'
+
+PlotPathNet=function(data=NULL,BioM2_pathways_obj=NULL,FeatureAnno=NULL,pathlistDB=NULL,PathNames=NULL,
+                     cutoff=0.2,num=20){
+  featureAnno=FeatureAnno[FeatureAnno$ID %in% colnames(data),]
+  sub=list()
+  i=1
+  for(i in 1:length(PathNames)){
+    cpg_id=featureAnno$ID[which(featureAnno$entrezID %in% pathlistDB[[PathNames[i]]])]
+    cpg_data=data[,c('label',cpg_id)]
+    COR=stats::cor(cpg_data$label,cpg_data[,-1])
+    COR=ifelse(COR>0,COR,-COR)
+    names(COR)=cpg_id
+    n=names(COR)[order(COR,decreasing = T)][1:num]
+    sub[[i]]=data[,n]
+    names(sub)[i]=PathNames[i]
+  }
+  result=list()
+  a=lapply(1:length(PathNames), function(x){
+    data.frame(
+      label=colnames(sub[[x]]),
+      value=rep(names(sub)[x],length(sub[[x]]))
+    )
+  })
+  result$vertices=do.call(rbind,a)
+  comid=unique(result$vertices$label[duplicated(result$vertices$label)])
+  result$vertices=result$vertices[!duplicated(result$vertices$label),]
+  rownames(result$vertices)=result$vertices$label
+  nonid=setdiff(result$vertices$label,comid)
+  x=NA
+  y=NA
+  xend=NA
+  yend=NA
+  same.conf=NA
+  conf=NA
+  names(sub)=NULL
+  dd=do.call(cbind,sub)
+  dd=dd[,!duplicated(colnames(dd))]
+  cor_matrix <- stats::cor(dd)
+  upper_tri <- cor_matrix[upper.tri(cor_matrix)]
+  n <- nrow(cor_matrix)
+  upper_tri_matrix <- matrix(0, n, n)
+  upper_tri_matrix[upper.tri(upper_tri_matrix)] <- upper_tri
+  cor_matrix=upper_tri_matrix
+  colnames(cor_matrix)=colnames(dd)
+  rownames(cor_matrix)=colnames(dd)
+  df <- data.frame(from = character(n^2), to = character(n^2), Correlation = numeric(n^2))
+  count <- 1
+  for (i in 1:n) {
+    for (j in i:n) {
+      df[count, "from"] <- rownames(cor_matrix)[i]
+      df[count, "to"] <- rownames(cor_matrix)[j]
+      df[count, "Correlation"] <- cor_matrix[i, j]
+      count <- count + 1
+    }
+  }
+  df$Correlation=ifelse(df$Correlation>0,df$Correlation,-df$Correlation)
+  df=df[df$Correlation>0,]
+  
+  DF=df[df$Correlation> cutoff,]
+  DF$same.conf=ifelse(result$vertices[DF$from,"value"]==result$vertices[DF$to,"value"],1,0)
+  DF1=DF[DF$same.conf==1,]
+  
+  pname=BioM2_pathways_obj$PathwaysResult$id[1:10]
+  cor_matrix <- stats::cor(BioM2_pathways_obj$PathwaysMatrix[,pname])
+  upper_tri <- cor_matrix[upper.tri(cor_matrix)]
+  n <- nrow(cor_matrix)
+  upper_tri_matrix <- matrix(0, n, n)
+  upper_tri_matrix[upper.tri(upper_tri_matrix)] <- upper_tri
+  cor_matrix=upper_tri_matrix
+  colnames(cor_matrix)=colnames(BioM2_pathways_obj$PathwaysMatrix[,pname])
+  rownames(cor_matrix)=colnames(BioM2_pathways_obj$PathwaysMatrix[,pname])
+  df <- data.frame(from = character(n^2), to = character(n^2), Correlation = numeric(n^2))
+  count <- 1
+  for (i in 1:n) {
+    for (j in i:n) {
+      df[count, "from"] <- rownames(cor_matrix)[i]
+      df[count, "to"] <- rownames(cor_matrix)[j]
+      df[count, "Correlation"] <- cor_matrix[i, j]
+      count <- count + 1
+    }
+  }
+  df$Correlation=ifelse(df$Correlation>0,df$Correlation,-df$Correlation)
+  DF0=df[df$Correlation> 0,]
+  DF0=DF0[DF0$Correlation>quantile(DF0$Correlation, probs = 0.75),]
+  map=result$vertices[which(!duplicated(result$vertices$value)),]
+  rownames(map)=map$value
+  DF0$from=map[DF0$from,]$label
+  DF0$to=map[DF0$to,]$label
+  DF0$same.conf=rep(0,nrow(DF0))
+  DF=rbind(DF1,DF0)
+  result$edges=DF
+  
+  fb.igra=graph_from_data_frame(result$edges[,1:2],directed = FALSE)
+  V(fb.igra)$conf=result$vertices[V(fb.igra)$name, "value"]
+  E(fb.igra)$same.conf=result$edges$same.conf
+  E(fb.igra)$lty=ifelse(E(fb.igra)$same.conf == 1, 1, 2)
+  
+  pic<-ggplot(ggnetwork(fb.igra), aes(x = x, y = y, xend = xend, yend = yend)) +
+    geom_edges(aes(linetype= as.factor(same.conf)),
+               #arrow = arrow(length = unit(6, "pt"), type = "closed") #if directed
+               color = "grey50",
+               curvature = 0.2,
+               alpha=0.8,
+               ncp=10,
+               linewidth=0.7
+    ) +
+    geom_nodes(aes(color = conf),
+               size = 7,
+               alpha=0.5) +
+    scale_color_brewer("Pathways",
+                       palette = 'Paired') +
+    scale_linetype_manual(values = c(2,1)) +
+    guides(linetype =  "none") +
+    theme_blank()+
+    geom_nodes(aes(color = conf),
+               size = 4)+labs(title = 'Network Diagram of TOP 10 Pathway-Level Features')+
+    theme(legend.text = element_text(family = 'serif',face = 'bold.italic',color = 'grey15'),
+          legend.title = element_text(family = 'serif',face = 'bold'),
+          plot.title = element_text(family = 'serif',face = 'bold'))+
+    geom_mark_ellipse(
+      aes(fill=conf,label =conf),
+      alpha = 0.2,
+      show.legend = F
+    )+scale_fill_brewer(palette = 'Paired')+xlim(-0.05,1.05)+ylim(-0.05,1.05)
+  return(pic)
+  
+}
