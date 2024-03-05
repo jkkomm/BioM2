@@ -464,10 +464,9 @@ PlotCorModule=(PathwaysModule_obj=Modules)
 
 ```
 ![Cor](https://github.com/jkkomm/img/blob/main/Cor.png)
-# Contribute
-Chen and Schwarz (2017) <arXiv:1712.0036v1>
-Horvath and Zhang (2005) <doi:10.2202/1544-6115.1128> 
-Langfelder and Horvath (2008) <doi:10.1186/1471-2105-9-559>
+# Citation
+- NIPS ML4H submission: Chen, J. and Schwarz, E., 2017. BioMM: Biologically-informed Multi-stage Machine learning for identification of epigenetic fingerprints. arXiv preprint arXiv:1712.00336.
+- Chen, Junfang, et al. "Association of a reproducible epigenetic risk profile for schizophrenia with brain methylation and function." JAMA psychiatry 77.6 (2020): 628-636.
 
 
 
