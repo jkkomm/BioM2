@@ -45,7 +45,7 @@ BioM2 is built on the mlr3 package. To use additional learners, please install t
 ```
 remotes::install_github("mlr-org/mlr3extralearners@*release")
 ```
-## Sample selection(MatchIt)
+## Sample Pairing (MatchIt)
 
 MatchIt package can be employed to identify the most optimal pairs of samples by matching the experimental and control samples based on covariates such as the age and gender of the samples,which allows for increased robustness to the choice of model.
 ```
